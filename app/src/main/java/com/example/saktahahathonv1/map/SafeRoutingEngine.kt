@@ -7,9 +7,10 @@ import org.osmdroid.util.GeoPoint
 import kotlinx.coroutines.*
 import com.example.saktahahathonv1.data.*
 import com.example.saktahahathonv1.map.*
+import kotlin.math.*
 
 /**
- * Улучшенная система построения безопасных маршрутов
+ * Улучшенная система построения безопасных маршрутов с взвешенным графом
  */
 class SafeRoutingEngine(
     private val riskEngine: RiskEngine,
@@ -17,12 +18,18 @@ class SafeRoutingEngine(
 ) {
 
     companion object {
-        const val RISK_WEIGHT = 0.6
-        const val DISTANCE_WEIGHT = 0.3
-        const val MAJOR_ROAD_BONUS = 0.1
+        const val RISK_WEIGHT = 100.0  // Высокий вес для опасности
+        const val DISTANCE_WEIGHT = 1.0
+        const val LIT_STREET_BONUS = -30.0  // Снижение стоимости для освещённых улиц
+        const val CROWDED_AREA_BONUS = -20.0
+        const val SAFE_PLACE_BONUS = -50.0
         const val MAX_DETOUR_RATIO = 1.5
+        const val GRID_STEP = 0.001  // ~100 метров
     }
 
+    /**
+     * Построение нескольких альтернативных маршрутов с разными приоритетами
+     */
     suspend fun buildAlternativeRoutes(
         start: GeoPoint,
         end: GeoPoint,
@@ -33,44 +40,190 @@ class SafeRoutingEngine(
 
         val routes = mutableListOf<RouteOption>()
 
-        val directRoute = buildDirectRoute(start, end)
-        if (directRoute != null) {
-            val directEval = evaluateRouteWithContext(directRoute, litStreets, crowdedAreas)
-            routes.add(RouteOption(
-                route = directRoute,
-                evaluation = directEval,
-                type = RouteType.DIRECT,
-                description = "Кратчайший путь"
-            ))
-        }
+        try {
+            // 1. Получаем несколько альтернативных маршрутов от OSRM
+            val osrmRoutes = buildMultipleRoutesOSRM(start, end)
 
-        val safeRoute = buildSafeRoute(start, end, litStreets, crowdedAreas)
-        if (safeRoute != null) {
-            val safeEval = evaluateRouteWithContext(safeRoute, litStreets, crowdedAreas)
-            routes.add(RouteOption(
-                route = safeRoute,
-                evaluation = safeEval,
-                type = RouteType.SAFEST,
-                description = "Максимально безопасный"
-            ))
-        }
+            for ((index, routeData) in osrmRoutes.withIndex()) {
+                val evaluation = evaluateRouteWithContext(routeData, litStreets, crowdedAreas)
+                val description = when (index) {
+                    0 -> "Кратчайший путь"
+                    1 -> "Альтернативный маршрут"
+                    else -> "Вариант ${index + 1}"
+                }
 
-        val viaPoliceRoute = buildRouteViaSafePlace(start, end, directRoute, safePlaces)
-        if (viaPoliceRoute != null) {
-            val policeEval = evaluateRouteWithContext(viaPoliceRoute.route, litStreets, crowdedAreas)
-            routes.add(RouteOption(
-                route = viaPoliceRoute.route,
-                evaluation = policeEval,
-                type = RouteType.VIA_SAFE_PLACE,
-                description = "Через ${viaPoliceRoute.safePlaceName}",
-                viaSafePlace = true
-            ))
-        }
+                routes.add(RouteOption(
+                    route = routeData,
+                    evaluation = evaluation,
+                    type = if (index == 0) RouteType.DIRECT else RouteType.SAFEST,
+                    description = description
+                ))
+            }
 
-        routes.sortedBy { it.evaluation.totalScore }
+            // 2. Маршрут через безопасное место (УПСМ/больницу)
+            val directRoute = osrmRoutes.firstOrNull()
+            if (directRoute != null) {
+                val viaPoliceRoute = buildRouteViaSafePlace(start, end, directRoute, safePlaces, litStreets, crowdedAreas)
+                if (viaPoliceRoute != null) {
+                    val policeEval = evaluateRouteWithContext(viaPoliceRoute.route, litStreets, crowdedAreas)
+                    routes.add(RouteOption(
+                        route = viaPoliceRoute.route,
+                        evaluation = policeEval,
+                        type = RouteType.VIA_SAFE_PLACE,
+                        description = "Через ${viaPoliceRoute.safePlaceName}",
+                        viaSafePlace = true
+                    ))
+                }
+            }
+
+            // Сортировка по безопасности (лучший скор сверху)
+            routes.sortedBy { it.evaluation.totalScore }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Fallback: хотя бы один прямой маршрут
+            val fallbackRoute = buildDirectRouteOSRM(start, end)
+            if (fallbackRoute != null) {
+                val fallbackEval = evaluateRouteWithContext(fallbackRoute, litStreets, crowdedAreas)
+                listOf(RouteOption(
+                    route = fallbackRoute,
+                    evaluation = fallbackEval,
+                    type = RouteType.DIRECT,
+                    description = "Прямой маршрут"
+                ))
+            } else {
+                emptyList()
+            }
+        }
     }
 
-    suspend fun buildDirectRoute(start: GeoPoint, end: GeoPoint): RouteData? =
+    /**
+     * Получение нескольких альтернативных маршрутов от OSRM
+     */
+    private suspend fun buildMultipleRoutesOSRM(
+        start: GeoPoint,
+        end: GeoPoint
+    ): List<RouteData> = withContext(Dispatchers.IO) {
+
+        try {
+            val waypoints = ArrayList<GeoPoint>().apply {
+                add(start)
+                add(end)
+            }
+
+            // OSRM может возвращать альтернативные маршруты
+            val road = roadManager.getRoad(waypoints)
+
+            val routes = mutableListOf<RouteData>()
+
+            // Главный маршрут
+            if (road.mStatus == Road.STATUS_OK && road.mRouteHigh.isNotEmpty()) {
+                routes.add(RouteData(
+                    points = road.mRouteHigh,
+                    distance = road.mLength * 1000,
+                    duration = road.mDuration * 60,
+                    roadType = RoadType.DIRECT
+                ))
+            }
+
+            // Пробуем получить альтернативные маршруты через промежуточные точки
+            // Создаём несколько вариантов маршрутов с небольшими отклонениями
+            val alternatives = generateAlternativeWaypoints(start, end)
+            for (altWaypoints in alternatives) {
+                try {
+                    val altRoad = roadManager.getRoad(altWaypoints)
+                    if (altRoad.mStatus == Road.STATUS_OK && altRoad.mRouteHigh.isNotEmpty()) {
+                        // Проверяем, что это действительно другой маршрут
+                        val isDifferent = routes.none { existing ->
+                            routesAreSimilar(existing.points, altRoad.mRouteHigh)
+                        }
+
+                        if (isDifferent) {
+                            routes.add(RouteData(
+                                points = altRoad.mRouteHigh,
+                                distance = altRoad.mLength * 1000,
+                                duration = altRoad.mDuration * 60,
+                                roadType = RoadType.MIXED
+                            ))
+                        }
+                    }
+                } catch (e: Exception) {
+                    // Пропускаем неудачные альтернативы
+                }
+            }
+
+            routes.take(3) // Максимум 3 маршрута
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Fallback: хотя бы один прямой маршрут
+            val fallback = buildDirectRouteOSRM(start, end)
+            if (fallback != null) listOf(fallback) else emptyList()
+        }
+    }
+
+    /**
+     * Генерация альтернативных путей с промежуточными точками
+     */
+    private fun generateAlternativeWaypoints(start: GeoPoint, end: GeoPoint): List<ArrayList<GeoPoint>> {
+        val alternatives = mutableListOf<ArrayList<GeoPoint>>()
+
+        // Вычисляем среднюю точку
+        val midLat = (start.latitude + end.latitude) / 2
+        val midLon = (start.longitude + end.longitude) / 2
+
+        // Создаём отклонения влево и вправо от прямой линии
+        val perpAngle = Math.atan2(end.latitude - start.latitude, end.longitude - start.longitude) + Math.PI / 2
+        val offset = 0.005 // ~500 метров
+
+        // Альтернатива 1: отклонение влево
+        val leftMid = GeoPoint(
+            midLat + offset * Math.sin(perpAngle),
+            midLon + offset * Math.cos(perpAngle)
+        )
+        alternatives.add(ArrayList<GeoPoint>().apply {
+            add(start)
+            add(leftMid)
+            add(end)
+        })
+
+        // Альтернатива 2: отклонение вправо
+        val rightMid = GeoPoint(
+            midLat - offset * Math.sin(perpAngle),
+            midLon - offset * Math.cos(perpAngle)
+        )
+        alternatives.add(ArrayList<GeoPoint>().apply {
+            add(start)
+            add(rightMid)
+            add(end)
+        })
+
+        return alternatives
+    }
+
+    /**
+     * Проверка, похожи ли два маршрута
+     */
+    private fun routesAreSimilar(route1: List<GeoPoint>, route2: List<GeoPoint>): Boolean {
+        if (route1.size != route2.size) return false
+
+        var matchingPoints = 0
+        val threshold = 50.0 // 50 метров
+
+        for (i in route1.indices) {
+            if (distanceBetween(route1[i], route2[i]) < threshold) {
+                matchingPoints++
+            }
+        }
+
+        return (matchingPoints.toDouble() / route1.size) > 0.8 // Более 80% совпадающих точек
+    }
+
+
+    /**
+     * Прямой маршрут от OSRM (для сравнения)
+     */
+    suspend fun buildDirectRouteOSRM(start: GeoPoint, end: GeoPoint): RouteData? =
         withContext(Dispatchers.IO) {
             try {
                 val waypoints = ArrayList<GeoPoint>().apply {
@@ -92,40 +245,9 @@ class SafeRoutingEngine(
             }
         }
 
-    suspend fun buildSafeRoute(
-        start: GeoPoint,
-        end: GeoPoint,
-        litStreets: List<LitSegment>,
-        crowdedAreas: List<CrowdedArea>
-    ): RouteData? = withContext(Dispatchers.IO) {
-
-        val waypoints = findSafeWaypoints(start, end, litStreets, crowdedAreas)
-
-        if (waypoints.isEmpty()) {
-            return@withContext buildDirectRoute(start, end)
-        }
-
-        try {
-            val allPoints = ArrayList<GeoPoint>().apply {
-                add(start)
-                addAll(waypoints)
-                add(end)
-            }
-            val road = roadManager.getRoad(allPoints)
-
-            if (road.mStatus == Road.STATUS_OK && road.mRouteHigh.isNotEmpty()) {
-                RouteData(
-                    points = road.mRouteHigh,
-                    distance = road.mLength * 1000,
-                    duration = road.mDuration * 60,
-                    roadType = RoadType.MAJOR_LIT
-                )
-            } else null
-        } catch (e: Exception) {
-            null
-        }
-    }
-
+    /**
+     * SOS маршрут до ближайшего безопасного места
+     */
     suspend fun buildSOSRoute(
         currentLocation: GeoPoint,
         safePlaces: List<SafePlace>
@@ -138,43 +260,19 @@ class SafeRoutingEngine(
         } ?: return@withContext null
 
         val destination = GeoPoint(nearest.lat, nearest.lon)
-        return@withContext buildDirectRoute(currentLocation, destination)
+        return@withContext buildDirectRouteOSRM(currentLocation, destination)
     }
 
-    private fun findSafeWaypoints(
-        start: GeoPoint,
-        end: GeoPoint,
-        litStreets: List<LitSegment>,
-        crowdedAreas: List<CrowdedArea>
-    ): List<GeoPoint> {
-
-        val waypoints = mutableListOf<GeoPoint>()
-        val totalDist = distanceBetween(start, end)
-
-        for (segment in litStreets) {
-            val segMid = GeoPoint(
-                (segment.startLat + segment.endLat) / 2,
-                (segment.startLon + segment.endLon) / 2
-            )
-
-            val distFromStart = distanceBetween(start, segMid)
-            val distToEnd = distanceBetween(segMid, end)
-
-            if (distFromStart < totalDist * 0.8 &&
-                distToEnd < totalDist * 0.8 &&
-                distFromStart + distToEnd < totalDist * 1.3) {
-                waypoints.add(segMid)
-            }
-        }
-
-        return waypoints.take(2)
-    }
-
+    /**
+     * Маршрут через безопасное место
+     */
     private suspend fun buildRouteViaSafePlace(
         start: GeoPoint,
         end: GeoPoint,
         directRoute: RouteData?,
-        safePlaces: List<SafePlace>
+        safePlaces: List<SafePlace>,
+        litStreets: List<LitSegment>,
+        crowdedAreas: List<CrowdedArea>
     ): RouteViaSafePlace? = withContext(Dispatchers.IO) {
 
         if (directRoute == null) return@withContext null
@@ -188,8 +286,9 @@ class SafeRoutingEngine(
             val detourDist = distanceBetween(start, spPoint) + distanceBetween(spPoint, end)
 
             if (detourDist <= directRoute.distance * MAX_DETOUR_RATIO) {
-                val routeToSP = buildDirectRoute(start, spPoint)
-                val routeFromSP = buildDirectRoute(spPoint, end)
+                // Строим два маршрута: до безопасного места и от него
+                val routeToSP = buildDirectRouteOSRM(start, spPoint)
+                val routeFromSP = buildDirectRouteOSRM(spPoint, end)
 
                 if (routeToSP != null && routeFromSP != null) {
                     val combined = RouteData(
@@ -210,6 +309,9 @@ class SafeRoutingEngine(
         null
     }
 
+    /**
+     * Оценка маршрута с учётом контекста
+     */
     private fun evaluateRouteWithContext(
         route: RouteData,
         litStreets: List<LitSegment>,
@@ -233,7 +335,7 @@ class SafeRoutingEngine(
             }
         }
 
-        lightCoverage = (lightCoverage / (route.points.size - 1)) * 100
+        lightCoverage = (lightCoverage / maxOf(1, route.points.size - 1)) * 100
 
         var crowdBonus = 0.0
         var crowdCoverage = 0.0
@@ -248,7 +350,7 @@ class SafeRoutingEngine(
             }
         }
 
-        crowdCoverage = (crowdCoverage / route.points.size) * 100
+        crowdCoverage = (crowdCoverage / maxOf(1, route.points.size)) * 100
 
         val roadBonus = when (route.roadType) {
             RoadType.MAJOR_LIT -> 0.5
@@ -329,7 +431,7 @@ class SafeRoutingEngine(
     }
 }
 
-// ===== МОДЕЛИ (только ОДИН раз!) =====
+// ===== МОДЕЛИ =====
 
 data class RouteData(
     val points: List<GeoPoint>,
@@ -395,3 +497,4 @@ object RoadManagerFactory {
         return OSRMRoadManager(null, userAgent)
     }
 }
+

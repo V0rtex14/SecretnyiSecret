@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="@dimen/spacing_xl"
+    android:background="@color/background">
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@android:drawable/stat_notify_error"
+        app:tint="@color/secondary"
+        android:alpha="0.7"
+        android:contentDescription="@string/error" />
+
+    <TextView
+        android:id="@+id/txtErrorTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/error"
+        android:textAppearance="@style/TextAppearance.SafeWalk.Title"
+        android:layout_marginTop="@dimen/spacing_md" />
+
+    <TextView
+        android:id="@+id/txtErrorMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Произошла ошибка при загрузке данных"
+        android:textAppearance="@style/TextAppearance.SafeWalk.Body"
+        android:textColor="@color/text_secondary"
+        android:layout_marginTop="@dimen/spacing_sm"
+        android:gravity="center" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRetry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/retry"
+        style="@style/Widget.SafeWalk.Button"
+        android:layout_marginTop="@dimen/spacing_lg" />
+
+</LinearLayout>

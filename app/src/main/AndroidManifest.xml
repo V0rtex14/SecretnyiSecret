@@ -31,16 +31,68 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
+        <!-- Login Activity - Start Screen -->
         <activity
-            android:name="com.example.saktahahathonv1.MainActivity"
+            android:name="com.example.saktahahathonv1.auth.LoginActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:configChanges="orientation|screenSize">
+            android:theme="@style/Theme.SaktaHAHATHONV1"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Register Activity -->
+        <activity
+            android:name="com.example.saktahahathonv1.auth.RegisterActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SaktaHAHATHONV1"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Main Activity -->
+        <activity
+            android:name="com.example.saktahahathonv1.MainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize" />
+
+        <!-- Friends Activity -->
+        <activity
+            android:name="com.example.saktahahathonv1.friends.FriendsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SaktaHAHATHONV1" />
+
+        <!-- History Activity -->
+        <activity
+            android:name="com.example.saktahahathonv1.history.HistoryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SaktaHAHATHONV1" />
+
+        <!-- Profile Activity -->
+        <activity
+            android:name="com.example.saktahahathonv1.profile.ProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SaktaHAHATHONV1" />
+
+        <!-- Escort Activity -->
+        <activity
+            android:name="com.example.saktahahathonv1.escort.EscortActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SaktaHAHATHONV1" />
+
+        <!-- Family Activity -->
+        <activity
+            android:name="com.example.saktahahathonv1.family.FamilyActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SaktaHAHATHONV1" />
 
         <!-- Конфигурация OSMDroid -->
         <meta-data

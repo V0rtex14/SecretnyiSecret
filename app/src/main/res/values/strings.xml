@@ -1,3 +1,83 @@
 <resources>
-    <string name="app_name">SaktaHAHATHONV1</string>
+    <string name="app_name">SafeWalk</string>
+
+    <!-- Common -->
+    <string name="close">Закрыть</string>
+    <string name="cancel">Отмена</string>
+    <string name="ok">ОК</string>
+    <string name="save">Сохранить</string>
+    <string name="delete">Удалить</string>
+    <string name="edit">Редактировать</string>
+    <string name="share">Поделиться</string>
+    <string name="send">Отправить</string>
+    <string name="loading">Загрузка...</string>
+    <string name="error">Ошибка</string>
+    <string name="retry">Повторить</string>
+
+    <!-- Escort Screen -->
+    <string name="escort_active">Сопровождение активно</string>
+    <string name="escort_start">Начать сопровождение</string>
+    <string name="escort_stop">Остановить сопровождение</string>
+    <string name="escort_share">Поделиться местоположением</string>
+    <string name="escort_remaining">Осталось</string>
+    <string name="escort_arrival">Прибытие</string>
+    <string name="escort_destination">Пункт назначения</string>
+    <string name="escort_turn_right">Поверните направо</string>
+    <string name="escort_turn_left">Поверните налево</string>
+    <string name="escort_continue_straight">Продолжайте прямо</string>
+    <string name="escort_arrived">Вы прибыли</string>
+
+    <!-- Map -->
+    <string name="my_location">Мое местоположение</string>
+    <string name="zoom_in">Увеличить</string>
+    <string name="zoom_out">Уменьшить</string>
+    <string name="sos">SOS</string>
+    <string name="build_route">Построить маршрут</string>
+    <string name="mark_danger">Отметить опасное место</string>
+
+    <!-- Friends -->
+    <string name="friends">Друзья</string>
+    <string name="add_friend">Добавить друга</string>
+    <string name="remove_friend">Удалить друга</string>
+    <string name="friend_request">Запрос в друзья</string>
+    <string name="accept">Принять</string>
+    <string name="decline">Отклонить</string>
+    <string name="friend_online">Онлайн</string>
+    <string name="friend_offline">Не в сети</string>
+    <string name="friend_sharing_location">Делится местоположением</string>
+
+    <!-- Family -->
+    <string name="family">Семья</string>
+    <string name="children">Дети</string>
+    <string name="add_child">Добавить ребенка</string>
+    <string name="child_location">Местоположение ребенка</string>
+    <string name="safe_zone">Безопасная зона</string>
+    <string name="entered_safe_zone">Вошел в безопасную зону</string>
+    <string name="left_safe_zone">Покинул безопасную зону</string>
+
+    <!-- History -->
+    <string name="history">История</string>
+    <string name="route_history">История маршрутов</string>
+    <string name="no_history">История пуста</string>
+    <string name="total_routes">Маршрутов</string>
+    <string name="total_distance">Расстояние</string>
+    <string name="avg_safety">Безопасность</string>
+
+    <!-- Profile -->
+    <string name="profile">Профиль</string>
+    <string name="settings">Настройки</string>
+    <string name="privacy">Приватность</string>
+    <string name="notifications">Уведомления</string>
+    <string name="about">О приложении</string>
+    <string name="logout">Выйти</string>
+    <string name="logout_confirm">Вы уверены, что хотите выйти?</string>
+
+    <!-- Safety -->
+    <string name="danger_zone">Опасная зона</string>
+    <string name="entering_danger_zone">Вы входите в опасную зону!</string>
+    <string name="safe_place">Безопасное место</string>
+    <string name="police">Полиция</string>
+    <string name="hospital">Больница</string>
+    <string name="lit_street">Освещенная улица</string>
+    <string name="crowded_area">Людное место</string>
 </resources>

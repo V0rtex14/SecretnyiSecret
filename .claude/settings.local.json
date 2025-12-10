@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(./gradlew :app:compileDebugKotlin:*)",
+      "Bash(./gradlew :app:assembleDebug:*)",
+      "Bash(.gradlew.bat :app:assembleDebug)",
+      "Bash(gradlew.bat:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

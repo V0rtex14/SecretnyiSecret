@@ -1,0 +1,31 @@
+[
+  {
+    "id": "c1",
+    "lat": 42.8742,
+    "lon": 74.5702,
+    "type": "dark_area",
+    "description": ";>E>5 >A25I5=85 2>7;5 ?0@:0",
+    "timestamp": "2025-12-08T20:15:00",
+    "userId": "user123",
+    "verified": false
+  },
+  {
+    "id": "c2",
+    "lat": 42.8768,
+    "lon": 74.5692,
+    "description": ">4>7@8B5;L=0O 3@C??0 ;N459",
+    "timestamp": "2025-12-07T21:30:00",
+    "userId": "user456",
+    "verified": true
+  },
+  {
+    "id": "c3",
+    "lat": 42.8751,
+    "lon": 74.5688,
+    "type": "suspicious_activity",
+    "description": "!B@0==>5 ?>2545=85 2>7;5 10=:><0B0",
+    "timestamp": "2025-12-06T19:45:00",
+    "userId": "user789",
+    "verified": false
+  }
+]

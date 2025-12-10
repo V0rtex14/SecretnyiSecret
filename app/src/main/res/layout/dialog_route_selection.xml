@@ -15,7 +15,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp" />
 
     <!-- Поле "Откуда" -->
     <com.google.android.material.textfield.TextInputLayout
@@ -31,18 +31,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:completionThreshold="1"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:completionThreshold="2" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Кнопки: Поменять местами / Моё местоположение -->
+    <!-- Кнопки: Выбрать на карте (откуда) / Моё местоположение -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginVertical="4dp">
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp">
+
+        <ImageButton
+            android:id="@+id/btnPickFromOnMap"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@android:drawable/ic_menu_mapmode"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Выбрать точку на карте" />
 
         <ImageButton
             android:id="@+id/btnSwap"
@@ -50,12 +59,13 @@
             android:layout_height="40dp"
             android:src="@android:drawable/ic_menu_sort_by_size"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Поменять местами"/>
+            android:contentDescription="Поменять местами"
+            android:layout_marginStart="8dp" />
 
         <Space
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <ImageButton
             android:id="@+id/btnMyLocation"
@@ -63,7 +73,31 @@
             android:layout_height="40dp"
             android:src="@android:drawable/ic_menu_mylocation"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Моё местоположение"/>
+            android:contentDescription="Моё местоположение" />
+
+    </LinearLayout>
+
+    <!-- Кнопка: Выбрать на карте (куда) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp">
+
+        <ImageButton
+            android:id="@+id/btnPickToOnMap"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@android:drawable/ic_menu_mapmode"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Выбрать точку назначения на карте" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
@@ -81,8 +115,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:completionThreshold="1"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:completionThreshold="2" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,7 +127,7 @@
         android:layout_height="wrap_content"
         android:text="Найти маршруты"
         android:layout_marginTop="16dp"
-        app:icon="@android:drawable/ic_menu_directions"/>
+        app:icon="@android:drawable/ic_menu_directions" />
 
     <!-- Прогресс бар -->
     <ProgressBar
@@ -101,8 +135,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginVertical="16dp"
-        android:visibility="gone"/>
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone" />
 
     <!-- Список маршрутов -->
     <LinearLayout
@@ -119,13 +154,13 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/routesRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="300dp"/>
+            android:maxHeight="300dp" />
 
     </LinearLayout>
 

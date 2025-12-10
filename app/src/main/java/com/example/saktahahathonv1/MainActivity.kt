@@ -1,6 +1,7 @@
 package com.example.saktahahathonv1
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Paint
@@ -32,14 +33,22 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import com.example.saktahahathonv1.map.*
 import com.example.saktahahathonv1.data.*
+import com.example.saktahahathonv1.data.BishkekAddresses
+import com.example.saktahahathonv1.friends.FriendsActivity
+import com.example.saktahahathonv1.history.HistoryActivity
+import com.example.saktahahathonv1.profile.ProfileActivity
 import kotlin.math.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
-    private lateinit var btnSos: FloatingActionButton
-    private lateinit var btnMarkDanger: MaterialButton
-    private lateinit var btnRoute: MaterialButton
+    private lateinit var btnSos: com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    private lateinit var bottomNavigation: com.google.android.material.bottomnavigation.BottomNavigationView
+    private lateinit var btnMyLocation: FloatingActionButton
+    private lateinit var btnZoomIn: FloatingActionButton
+    private lateinit var btnZoomOut: FloatingActionButton
+    private lateinit var cardProfile: com.google.android.material.card.MaterialCardView
+    private lateinit var cardFilter: com.google.android.material.card.MaterialCardView
 
     private var myLocationOverlay: MyLocationNewOverlay? = null
     private var routeLine: Polyline? = null
@@ -47,12 +56,14 @@ class MainActivity : AppCompatActivity() {
     // Engines
     private lateinit var riskEngine: RiskEngine
     private lateinit var roadManager: OSRMRoadManager
+    private lateinit var routingEngine: SafeRoutingEngine
 
     // Данные
     private val incidents = mutableListOf<Incident>()
     private val complaints = mutableListOf<Complaint>()
     private val safePlaces = mutableListOf<SafePlace>()
     private val litSegments = mutableListOf<LitSegment>()
+    private val crowdedAreas = mutableListOf<CrowdedArea>()
 
     // Overlays
     private val incidentMarkers = mutableListOf<Marker>()
@@ -77,8 +88,12 @@ class MainActivity : AppCompatActivity() {
 
         mapView = findViewById(R.id.mapView)
         btnSos = findViewById(R.id.btnSos)
-        btnMarkDanger = findViewById(R.id.btnMarkDanger)
-        btnRoute = findViewById(R.id.btnRoute)
+        bottomNavigation = findViewById(R.id.bottomNavigation)
+        btnMyLocation = findViewById(R.id.btnMyLocation)
+        btnZoomIn = findViewById(R.id.btnZoomIn)
+        btnZoomOut = findViewById(R.id.btnZoomOut)
+        cardProfile = findViewById(R.id.cardProfile)
+        cardFilter = findViewById(R.id.cardFilter)
 
         setupMap()
         setupUI()
@@ -97,9 +112,17 @@ class MainActivity : AppCompatActivity() {
         // Overlay для выбора точки (клик по карте)
         val eventsOverlay = MapEventsOverlay(object : MapEventsReceiver {
             override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
-                if (p != null && isSelectingComplaintLocation) {
-                    selectComplaintLocation(p)
-                    return true
+                if (p != null) {
+                    // Если выбираем точку жалобы
+                    if (isSelectingComplaintLocation) {
+                        selectComplaintLocation(p)
+                        return true
+                    }
+                    // Если выбираем точку для маршрута
+                    if (routeDialogInputMode != null) {
+                        handleRoutePointSelection(p)
+                        return true
+                    }
                 }
                 return false
             }
@@ -123,30 +146,137 @@ class MainActivity : AppCompatActivity() {
             buildSOSRoute()
         }
 
-        // Жалоба - выбрать место на карте
-        btnMarkDanger.setOnClickListener {
-            startComplaintSelection()
+        // Зум кнопки
+        btnZoomIn.setOnClickListener {
+            mapView.controller.zoomIn()
         }
 
-        // Маршрут - диалог с адресами
-        btnRoute.setOnClickListener {
-            showRouteDialog()
+        btnZoomOut.setOnClickListener {
+            mapView.controller.zoomOut()
+        }
+
+        // Моё местоположение
+        btnMyLocation.setOnClickListener {
+            myLocationOverlay?.myLocation?.let { location ->
+                mapView.controller.animateTo(location)
+                mapView.controller.setZoom(16.0)
+            } ?: run {
+                Toast.makeText(this, "Местоположение недоступно", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Профиль
+        cardProfile.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
+
+        // Фильтры
+        cardFilter.setOnClickListener {
+            showFilterDialog()
+        }
+
+        // Нижняя навигация
+        bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    Toast.makeText(this, "Главная", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.nav_friends -> {
+                    startActivity(Intent(this, FriendsActivity::class.java))
+                    true
+                }
+                R.id.nav_route -> {
+                    showRouteDialog()
+                    true
+                }
+                R.id.nav_history -> {
+                    startActivity(Intent(this, HistoryActivity::class.java))
+                    true
+                }
+                R.id.nav_profile -> {
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                    true
+                }
+                else -> false
+            }
         }
     }
 
+    private fun showFilterDialog() {
+        val options = arrayOf(
+            "Показать инциденты",
+            "Показать жалобы",
+            "Показать безопасные зоны",
+            "Показать освещённые улицы",
+            "Добавить жалобу на опасное место"
+        )
+
+        AlertDialog.Builder(this)
+            .setTitle("Действия на карте")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0, 1, 2, 3 -> {
+                        // TODO: реализовать фильтры
+                        visualizeData()
+                    }
+                    4 -> {
+                        // Добавить жалобу
+                        startComplaintSelection()
+                    }
+                }
+            }
+            .setNegativeButton("Отмена", null)
+            .show()
+    }
+
+    private fun showFriendsDemo() {
+        // Демо отслеживание друга
+        val demoFriend = GeoPoint(42.8766, 74.5708)
+
+        val friendMarker = Marker(mapView).apply {
+            position = demoFriend
+            title = "Алия (друг)"
+            snippet = "Последнее обновление: только что"
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+
+            // Используем иконку друга
+            try {
+                icon = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_map_marker_friend)
+            } catch (e: Exception) {
+                icon = createCircleDrawable(Color.GREEN, 24)
+            }
+        }
+
+        mapView.overlays.add(friendMarker)
+        mapView.controller.animateTo(demoFriend)
+        mapView.invalidate()
+
+        Toast.makeText(this, "Показано местоположение друга (демо)", Toast.LENGTH_LONG).show()
+    }
+
     private fun loadDataAndInitEngines() {
+        // Загрузка известных адресов из JSON
+        BishkekAddresses.loadAddresses(this)
+
         lifecycleScope.launch {
             try {
                 val centerLat = 42.8746
                 val centerLon = 74.5698
 
-                incidents.addAll(DemoDataGenerator.generateDemoIncidents(centerLat, centerLon, 20))
-                complaints.addAll(DemoDataGenerator.generateDemoComplaints(centerLat, centerLon, 12))
-                safePlaces.addAll(DemoDataGenerator.generateDemoSafePlaces(centerLat, centerLon))
-                litSegments.addAll(DemoDataGenerator.generateDemoLitSegments(centerLat, centerLon))
+                // Загружаем данные из JSON файлов
+                val dataManager = DataManager(this@MainActivity)
+                incidents.addAll(dataManager.loadIncidents())
+                complaints.addAll(dataManager.loadComplaints())
+                safePlaces.addAll(dataManager.loadSafePlaces())
+                litSegments.addAll(dataManager.loadLitSegments())
+
+                // Генерируем людные зоны (пока нет в JSON)
+                crowdedAreas.addAll(DemoDataGenerator.generateCrowdedAreas(centerLat, centerLon))
 
                 riskEngine = RiskEngine(incidents, complaints, safePlaces, litSegments)
                 roadManager = OSRMRoadManager(this@MainActivity, packageName)
+                routingEngine = SafeRoutingEngine(riskEngine, roadManager)
 
                 visualizeData()
 
@@ -305,40 +435,131 @@ class MainActivity : AppCompatActivity() {
 
     // ===== МАРШРУТ ПО АДРЕСАМ =====
 
-    private fun showRouteDialog() {
-        val dialogView = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(50, 40, 50, 40)
-        }
+    private var routeDialogInputMode: String? = null // "from" or "to"
+    private var selectedFromPoint: GeoPoint? = null
+    private var selectedToPoint: GeoPoint? = null
+    private var routeSelectionMarker: Marker? = null
 
-        val inputFrom = EditText(this).apply {
-            hint = "Откуда (адрес)"
-            inputType = InputType.TYPE_CLASS_TEXT
-        }
+    private fun handleRoutePointSelection(point: GeoPoint) {
+        when (routeDialogInputMode) {
+            "from" -> {
+                selectedFromPoint = point
+                Toast.makeText(this, "Точка отправления выбрана. Теперь выберите точку назначения.", Toast.LENGTH_SHORT).show()
+                routeDialogInputMode = "to"
 
-        val inputTo = EditText(this).apply {
-            hint = "Куда (адрес)"
-            inputType = InputType.TYPE_CLASS_TEXT
-        }
+                // Показать маркер точки отправления
+                routeSelectionMarker?.let { mapView.overlays.remove(it) }
+                routeSelectionMarker = Marker(mapView).apply {
+                    position = point
+                    title = "Откуда"
+                    setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    icon = ContextCompat.getDrawable(
+                        this@MainActivity,
+                        android.R.drawable.ic_menu_mylocation
+                    )
+                }
+                mapView.overlays.add(routeSelectionMarker)
+                mapView.invalidate()
+            }
+            "to" -> {
+                selectedToPoint = point
+                routeDialogInputMode = null
 
-        dialogView.addView(inputFrom)
-        dialogView.addView(inputTo)
+                Toast.makeText(this, "Строим маршрут...", Toast.LENGTH_SHORT).show()
 
-        AlertDialog.Builder(this)
-            .setTitle("Построить маршрут")
-            .setView(dialogView)
-            .setPositiveButton("Построить") { _, _ ->
-                val from = inputFrom.text.toString()
-                val to = inputTo.text.toString()
+                // Очистить маркер выбора
+                routeSelectionMarker?.let { mapView.overlays.remove(it) }
+                routeSelectionMarker = null
+                mapView.invalidate()
 
-                if (from.isNotBlank() && to.isNotBlank()) {
-                    buildRouteFromAddresses(from, to)
-                } else {
-                    Toast.makeText(this, "Заполните оба адреса", Toast.LENGTH_SHORT).show()
+                // Построить маршрут
+                if (selectedFromPoint != null && selectedToPoint != null) {
+                    buildSafeRoute(selectedFromPoint!!, selectedToPoint!!)
+                    selectedFromPoint = null
+                    selectedToPoint = null
                 }
             }
-            .setNegativeButton("Отмена", null)
-            .show()
+        }
+    }
+
+    private fun showRouteDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_route_selection, null)
+
+        val inputFrom = dialogView.findViewById<android.widget.AutoCompleteTextView>(R.id.inputFrom)
+        val inputTo = dialogView.findViewById<android.widget.AutoCompleteTextView>(R.id.inputTo)
+        val btnBuild = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnBuild)
+        val btnSwap = dialogView.findViewById<android.widget.ImageButton>(R.id.btnSwap)
+        val btnMyLocation = dialogView.findViewById<android.widget.ImageButton>(R.id.btnMyLocation)
+        val btnPickFromOnMap = dialogView.findViewById<android.widget.ImageButton>(R.id.btnPickFromOnMap)
+        val btnPickToOnMap = dialogView.findViewById<android.widget.ImageButton>(R.id.btnPickToOnMap)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        // Setup autocomplete adapters
+        val addresses = BishkekAddresses.KNOWN_LOCATIONS.map { location ->
+            "${location.name} - ${location.address}"
+        }
+        val fromAdapter = android.widget.ArrayAdapter<String>(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            addresses
+        )
+        val toAdapter = android.widget.ArrayAdapter<String>(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            addresses
+        )
+
+        inputFrom.setAdapter(fromAdapter)
+        inputTo.setAdapter(toAdapter)
+
+        // Set my location as "from"
+        btnMyLocation.setOnClickListener {
+            val myLocation = myLocationOverlay?.myLocation
+            if (myLocation != null) {
+                inputFrom.setText("Моё местоположение (${myLocation.latitude.format(4)}, ${myLocation.longitude.format(4)})")
+            } else {
+                Toast.makeText(this, "Местоположение недоступно", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Pick "from" point on map
+        btnPickFromOnMap.setOnClickListener {
+            dialog.dismiss()
+            routeDialogInputMode = "from"
+            Toast.makeText(this, "Нажмите на карту чтобы выбрать точку отправления", Toast.LENGTH_LONG).show()
+        }
+
+        // Pick "to" point on map
+        btnPickToOnMap.setOnClickListener {
+            dialog.dismiss()
+            routeDialogInputMode = "to"
+            Toast.makeText(this, "Нажмите на карту чтобы выбрать точку назначения", Toast.LENGTH_LONG).show()
+        }
+
+        // Swap from and to
+        btnSwap.setOnClickListener {
+            val temp = inputFrom.text.toString()
+            inputFrom.setText(inputTo.text.toString())
+            inputTo.setText(temp)
+        }
+
+        // Build route button
+        btnBuild.setOnClickListener {
+            val from = inputFrom.text.toString()
+            val to = inputTo.text.toString()
+
+            if (from.isNotBlank() && to.isNotBlank()) {
+                dialog.dismiss()
+                buildRouteFromAddresses(from, to)
+            } else {
+                Toast.makeText(this, "Заполните оба адреса", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dialog.show()
     }
 
     private fun buildRouteFromAddresses(fromAddress: String, toAddress: String) {
@@ -350,9 +571,9 @@ class MainActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
 
-                // Геокодирование адресов
-                val fromPoint = geocodeAddress(fromAddress)
-                val toPoint = geocodeAddress(toAddress)
+                // Сначала проверяем, есть ли адрес в известных локациях
+                val fromPoint = getPointFromAddress(fromAddress)
+                val toPoint = getPointFromAddress(toAddress)
 
                 if (fromPoint == null || toPoint == null) {
                     Toast.makeText(
@@ -374,6 +595,24 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    private suspend fun getPointFromAddress(address: String): GeoPoint? {
+        // Check if it's "Моё местоположение"
+        if (address.contains("Моё местоположение")) {
+            return myLocationOverlay?.myLocation
+        }
+
+        // Check if it's a known location
+        for (location in BishkekAddresses.KNOWN_LOCATIONS) {
+            if (address.contains(location.name, ignoreCase = true) ||
+                address.contains(location.address, ignoreCase = true)) {
+                return GeoPoint(location.lat, location.lon)
+            }
+        }
+
+        // Otherwise, try geocoding
+        return geocodeAddress(address)
     }
 
     private suspend fun geocodeAddress(address: String): GeoPoint? {
@@ -444,33 +683,26 @@ class MainActivity : AppCompatActivity() {
             try {
                 Toast.makeText(
                     this@MainActivity,
-                    "Строим безопасный маршрут...",
+                    "Строим безопасные маршруты...",
                     Toast.LENGTH_SHORT
                 ).show()
 
-                // Строим маршрут с учётом приоритета главных дорог
-                val route = buildRouteWithRoadPriority(start, end)
+                // Строим несколько альтернативных маршрутов с использованием нового алгоритма
+                val routeOptions = routingEngine.buildAlternativeRoutes(
+                    start = start,
+                    end = end,
+                    litStreets = litSegments,
+                    crowdedAreas = crowdedAreas,
+                    safePlaces = safePlaces
+                )
 
-                if (route != null) {
-                    val evaluation = riskEngine.evaluateRoute(route.points)
-
-                    displayRoute(route, evaluation)
-
-                    val riskLevel = when {
-                        evaluation.averageRisk < 0.5 -> "✅ Безопасно"
-                        evaluation.averageRisk < 1.5 -> "⚠️ Умеренный риск"
-                        else -> "⛔ Высокий риск"
-                    }
-
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Маршрут: ${(route.distance / 1000).format(2)} км\n$riskLevel",
-                        Toast.LENGTH_LONG
-                    ).show()
+                if (routeOptions.isNotEmpty()) {
+                    // Показываем диалог выбора маршрута
+                    showRouteSelectionDialog(routeOptions)
                 } else {
                     Toast.makeText(
                         this@MainActivity,
-                        "Не удалось построить маршрут",
+                        "Не удалось построить маршруты",
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -481,8 +713,117 @@ class MainActivity : AppCompatActivity() {
                     "Ошибка: ${e.message}",
                     Toast.LENGTH_LONG
                 ).show()
+                e.printStackTrace()
             }
         }
+    }
+
+    /**
+     * Показать диалог выбора маршрута из нескольких вариантов
+     */
+    private fun showRouteSelectionDialog(routes: List<RouteOption>) {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Выберите маршрут")
+            .setNegativeButton("Отмена", null)
+            .create()
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_route_selection, null)
+        val recyclerView = dialogView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.routesRecycler)
+        val layoutRoutes = dialogView.findViewById<android.widget.LinearLayout>(R.id.layoutRoutes)
+        val progressBar = dialogView.findViewById<android.widget.ProgressBar>(R.id.progressBar)
+
+        // Скрываем прогресс, показываем список
+        progressBar.visibility = android.view.View.GONE
+        layoutRoutes.visibility = android.view.View.VISIBLE
+
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        recyclerView.adapter = RouteOptionsAdapter(routes) { selectedRoute ->
+            dialog.dismiss()
+            displayRouteOption(selectedRoute)
+        }
+
+        dialog.setView(dialogView)
+        dialog.show()
+    }
+
+    /**
+     * Адаптер для отображения вариантов маршрутов
+     */
+    inner class RouteOptionsAdapter(
+        private val routes: List<RouteOption>,
+        private val onSelect: (RouteOption) -> Unit
+    ) : androidx.recyclerview.widget.RecyclerView.Adapter<RouteOptionsAdapter.ViewHolder>() {
+
+        inner class ViewHolder(view: android.view.View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+            val titleText: android.widget.TextView = android.widget.TextView(this@MainActivity).apply {
+                textSize = 16f
+                setTypeface(null, android.graphics.Typeface.BOLD)
+                setPadding(0, 0, 0, 8)
+            }
+            val detailsText: android.widget.TextView = android.widget.TextView(this@MainActivity).apply {
+                textSize = 14f
+                setTextColor(android.graphics.Color.GRAY)
+            }
+            val container: android.widget.LinearLayout = view as android.widget.LinearLayout
+        }
+
+        override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): ViewHolder {
+            val container = android.widget.LinearLayout(this@MainActivity).apply {
+                orientation = android.widget.LinearLayout.VERTICAL
+                setPadding(32, 24, 32, 24)
+                setBackgroundResource(android.R.drawable.list_selector_background)
+            }
+            return ViewHolder(container)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val route = routes[position]
+
+            holder.titleText.text = "${position + 1}. ${route.description}"
+
+            val distance = (route.route.distance / 1000).format(2)
+            val duration = (route.route.duration / 60).toInt()
+            val riskLevel = when {
+                route.evaluation.adjustedRisk < 0.5 -> "✅ Безопасно"
+                route.evaluation.adjustedRisk < 1.5 -> "⚠️ Умеренный риск"
+                else -> "⛔ Высокий риск"
+            }
+
+            holder.detailsText.text = "$distance км • $duration мин • $riskLevel\n" +
+                "Освещённость: ${route.evaluation.lightCoverage.toInt()}% • " +
+                "Людность: ${route.evaluation.crowdCoverage.toInt()}%"
+
+            holder.container.removeAllViews()
+            holder.container.addView(holder.titleText)
+            holder.container.addView(holder.detailsText)
+
+            holder.container.setOnClickListener {
+                onSelect(route)
+            }
+        }
+
+        override fun getItemCount() = routes.size
+    }
+
+    /**
+     * Отобразить выбранный вариант маршрута
+     */
+    private fun displayRouteOption(routeOption: RouteOption) {
+        displayRoute(routeOption.route, routeOption.evaluation.baseEvaluation)
+
+        val distance = (routeOption.route.distance / 1000).format(2)
+        val duration = (routeOption.route.duration / 60).toInt()
+        val riskLevel = when {
+            routeOption.evaluation.adjustedRisk < 0.5 -> "✅ Безопасно"
+            routeOption.evaluation.adjustedRisk < 1.5 -> "⚠️ Умеренный риск"
+            else -> "⛔ Высокий риск"
+        }
+
+        Toast.makeText(
+            this,
+            "${routeOption.description}\n$distance км • $duration мин\n$riskLevel",
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private suspend fun buildRouteWithRoadPriority(
@@ -638,11 +979,6 @@ class MainActivity : AppCompatActivity() {
             "Нажмите на карту чтобы отметить опасное место",
             Toast.LENGTH_LONG
         ).show()
-
-        btnMarkDanger.text = "Отмена"
-        btnMarkDanger.setOnClickListener {
-            cancelComplaintSelection()
-        }
     }
 
     private fun selectComplaintLocation(point: GeoPoint) {
@@ -736,11 +1072,6 @@ class MainActivity : AppCompatActivity() {
         complaintSelectionMarker?.let { mapView.overlays.remove(it) }
         complaintSelectionMarker = null
         mapView.invalidate()
-
-        btnMarkDanger.text = "Жалоба"
-        btnMarkDanger.setOnClickListener {
-            startComplaintSelection()
-        }
     }
 
     // ===== УТИЛИТЫ =====

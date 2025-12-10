@@ -1,0 +1,128 @@
+[
+  {
+    "name": "Площадь Ала-Тоо",
+    "address": "Площадь Ала-Тоо",
+    "lat": 42.8746,
+    "lon": 74.6122,
+    "category": "LANDMARK"
+  },
+  {
+    "name": "Ошский базар",
+    "address": "Беделова 1",
+    "lat": 42.8564,
+    "lon": 74.6236,
+    "category": "SHOPPING"
+  },
+  {
+    "name": "Дубовый парк",
+    "address": "Проспект Чуй",
+    "lat": 42.8765,
+    "lon": 74.6066,
+    "category": "LANDMARK"
+  },
+  {
+    "name": "ТЦ Вефа Центр",
+    "address": "Абдрахманова 176",
+    "lat": 42.8736,
+    "lon": 74.5853,
+    "category": "SHOPPING"
+  },
+  {
+    "name": "ТЦ Bishkek Park",
+    "address": "Ибраимова 115",
+    "lat": 42.8647,
+    "lon": 74.5953,
+    "category": "SHOPPING"
+  },
+  {
+    "name": "ТЦ ЦУМ",
+    "address": "Чуй 155",
+    "lat": 42.8763,
+    "lon": 74.6074,
+    "category": "SHOPPING"
+  },
+  {
+    "name": "ТЦ Дордой Плаза",
+    "address": "Киевская 148",
+    "lat": 42.8796,
+    "lon": 74.6198,
+    "category": "SHOPPING"
+  },
+  {
+    "name": "КНУ им. Баласагына",
+    "address": "Фрунзе 547",
+    "lat": 42.8468,
+    "lon": 74.6235,
+    "category": "EDUCATION"
+  },
+  {
+    "name": "КГТУ им. Раззакова",
+    "address": "Ч. Айтматова 66",
+    "lat": 42.8586,
+    "lon": 74.5842,
+    "category": "EDUCATION"
+  },
+  {
+    "name": "АУЦА",
+    "address": "Ч. Айтматова 7/6",
+    "lat": 42.8547,
+    "lon": 74.5693,
+    "category": "EDUCATION"
+  },
+  {
+    "name": "Национальный госпиталь",
+    "address": "Ахунбаева 115",
+    "lat": 42.8897,
+    "lon": 74.6236,
+    "category": "HOSPITAL"
+  },
+  {
+    "name": "Республиканская больница",
+    "address": "Тоголока Молдо 1",
+    "lat": 42.8732,
+    "lon": 74.5965,
+    "category": "HOSPITAL"
+  },
+  {
+    "name": "УПСМ Ленинский район",
+    "address": "Панфилова 144",
+    "lat": 42.8754,
+    "lon": 74.5892,
+    "category": "POLICE"
+  },
+  {
+    "name": "УПСМ Первомайский район",
+    "address": "Киевская 178",
+    "lat": 42.8824,
+    "lon": 74.6147,
+    "category": "POLICE"
+  },
+  {
+    "name": "Проспект Чуй",
+    "address": "Проспект Чуй",
+    "lat": 42.8746,
+    "lon": 74.6050,
+    "category": "STREET"
+  },
+  {
+    "name": "Проспект Манаса",
+    "address": "Проспект Манаса",
+    "lat": 42.8654,
+    "lon": 74.6025,
+    "category": "STREET"
+  },
+  {
+    "name": "Улица Киевская",
+    "address": "Улица Киевская",
+    "lat": 42.8802,
+    "lon": 74.6180,
+    "category": "STREET"
+  },
+  {
+    "name": "Улица Ибраимова",
+    "address": "Улица Ибраимова",
+    "lat": 42.8675,
+    "lon": 74.5925,
+    "category": "STREET"
+  }
+]

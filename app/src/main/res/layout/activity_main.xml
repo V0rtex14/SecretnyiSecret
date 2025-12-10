@@ -3,56 +3,141 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <!-- Карта -->
+    <!-- Карта на весь экран -->
     <org.osmdroid.views.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <!-- Кнопки внизу -->
+    <!-- Верхняя панель с профилем и фильтрами -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_gravity="top"
         android:orientation="horizontal"
-        android:padding="8dp"
-        android:background="#CC000000">
+        android:padding="16dp"
+        android:gravity="center_vertical">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnMarkDanger"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Жалоба"
-            android:textColor="@android:color/white"
-            app:icon="@android:drawable/ic_dialog_alert"
-            app:iconTint="@android:color/white"/>
+        <!-- Профиль -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardProfile"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="4dp"
+            android:clickable="true"
+            android:focusable="true">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnRoute"
-            style="@style/Widget.MaterialComponents.Button"
+            <ImageView
+                android:id="@+id/imgProfile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_profile"
+                android:scaleType="centerCrop"
+                android:contentDescription="Профиль" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <Space
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Маршрут"
-            app:icon="@android:drawable/ic_menu_directions"/>
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <!-- Фильтры -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardFilter"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="4dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_filter"
+                android:padding="12dp"
+                android:contentDescription="Фильтры" />
+
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 
-    <!-- FAB для SOS -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <!-- Кнопки справа (центрировать, зум) -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:orientation="vertical"
+        android:layout_marginEnd="16dp">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnMyLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:contentDescription="Моё местоположение"
+            android:src="@drawable/ic_my_location"
+            app:fabSize="normal"
+            app:backgroundTint="@android:color/white"
+            app:tint="#6B4EFF" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnZoomIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="Увеличить"
+            android:src="@drawable/ic_zoom_in"
+            app:fabSize="mini"
+            app:backgroundTint="@android:color/white"
+            app:tint="#6B4EFF" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnZoomOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Уменьшить"
+            android:src="@drawable/ic_zoom_out"
+            app:fabSize="mini"
+            app:backgroundTint="@android:color/white"
+            app:tint="#6B4EFF" />
+
+    </LinearLayout>
+
+    <!-- Большая SOS кнопка слева снизу -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnSos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="80dp"
-        android:contentDescription="SOS"
-        android:src="@android:drawable/ic_menu_call"
-        app:backgroundTint="#F44336"
-        app:tint="@android:color/white"/>
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="100dp"
+        android:text="SOS"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:icon="@drawable/ic_sos"
+        app:iconSize="32dp"
+        app:backgroundTint="#FF3B30"
+        app:iconTint="@android:color/white"
+        android:textColor="@android:color/white"
+        app:elevation="8dp" />
+
+    <!-- Нижняя навигация -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@android:color/white"
+        app:elevation="8dp"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_navigation_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

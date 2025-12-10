@@ -104,14 +104,8 @@ class MapViewModel : ViewModel() {
                 )
 
                 if (routes.isNotEmpty()) {
-                    // Выбираем самый безопасный
-                    val bestRoute = routes.minByOrNull { it.evaluation.totalScore }
-
-                    if (bestRoute != null) {
-                        _routeState.value = RouteState.Success(bestRoute)
-                    } else {
-                        _routeState.value = RouteState.Error("No valid routes found")
-                    }
+                    // Возвращаем все маршруты для выбора пользователем
+                    _routeState.value = RouteState.MultipleRoutes(routes)
                 } else {
                     _routeState.value = RouteState.Error("Could not build routes")
                 }
@@ -238,6 +232,7 @@ sealed class RouteState {
     object Loading : RouteState()
     data class Success(val route: RouteOption) : RouteState()
     data class SOSSuccess(val route: RouteOption) : RouteState()
+    data class MultipleRoutes(val routes: List<RouteOption>) : RouteState()
     data class Error(val message: String) : RouteState()
 }
 
