@@ -16,14 +16,17 @@ class AuthManager(private val context: Context) {
         get() = File(context.filesDir, "users.json")
 
     init {
-        // Копируем users.json из assets в filesDir при первом запуске
+        // Инициализация файла пользователей
         if (!usersFile.exists()) {
             try {
+                // Пытаемся скопировать из assets
                 val usersJson = context.assets.open("users.json").bufferedReader().use { it.readText() }
                 FileWriter(usersFile).use { it.write(usersJson) }
+                android.util.Log.d("AuthManager", "Loaded users from assets")
             } catch (e: Exception) {
-                // Создаем пустой файл если нет в assets
+                // Создаем пустой файл - пользователь должен зарегистрироваться
                 FileWriter(usersFile).use { it.write("[]") }
+                android.util.Log.d("AuthManager", "Created empty users.json - user must register")
             }
         }
     }
@@ -74,6 +77,7 @@ class AuthManager(private val context: Context) {
         // Сохраняем текущего пользователя
         saveCurrentUser(newUser)
 
+        android.util.Log.d("AuthManager", "User registered: ${newUser.email}")
         return AuthResult.Success(newUser)
     }
 
@@ -85,15 +89,21 @@ class AuthManager(private val context: Context) {
         if (password.isBlank()) return AuthResult.Error("Введите пароль")
 
         val users = loadUsers()
+
+        if (users.isEmpty()) {
+            return AuthResult.Error("Нет зарегистрированных пользователей. Пожалуйста, зарегистрируйтесь.")
+        }
+
         val passwordHash = hashPassword(password)
 
         val user = users.find {
             (it.email.equals(emailOrPhone, ignoreCase = true) || it.phone == emailOrPhone) &&
-            it.passwordHash == passwordHash
+                    it.passwordHash == passwordHash
         }
 
         return if (user != null) {
             saveCurrentUser(user)
+            android.util.Log.d("AuthManager", "User logged in: ${user.email}")
             AuthResult.Success(user)
         } else {
             AuthResult.Error("Неверный email/телефон или пароль")
@@ -101,13 +111,16 @@ class AuthManager(private val context: Context) {
     }
 
     /**
-     * Выход из аккаунта
+     * Выход из аккаунта (НЕ удаляет пользователя из users.json)
      */
     fun logout() {
+        val currentUser = getCurrentUser()
         context.getSharedPreferences("auth", Context.MODE_PRIVATE)
             .edit()
             .remove("current_user_id")
             .apply()
+
+        android.util.Log.d("AuthManager", "User logged out: ${currentUser?.email ?: "unknown"}")
     }
 
     /**
@@ -147,6 +160,7 @@ class AuthManager(private val context: Context) {
             saveCurrentUser(updatedUser)
         }
 
+        android.util.Log.d("AuthManager", "User updated: ${updatedUser.email}")
         return true
     }
 
@@ -158,6 +172,7 @@ class AuthManager(private val context: Context) {
             val type = object : TypeToken<List<User>>() {}.type
             gson.fromJson(json, type) ?: emptyList()
         } catch (e: Exception) {
+            android.util.Log.e("AuthManager", "Failed to load users", e)
             emptyList()
         }
     }

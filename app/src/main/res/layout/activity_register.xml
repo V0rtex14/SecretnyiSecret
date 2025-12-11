@@ -20,7 +20,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
             android:layout_marginBottom="8dp"
-            android:text="SafeWalk"
+            android:text="Sakta"
             android:textColor="#6B4EFF"
             android:textSize="32sp"
             android:textStyle="bold" />

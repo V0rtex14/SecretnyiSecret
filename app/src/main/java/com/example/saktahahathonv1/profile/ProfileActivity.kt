@@ -7,11 +7,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.example.saktahahathonv1.R
+import com.example.saktahahathonv1.auth.AuthManager
 import com.example.saktahahathonv1.auth.LoginActivity
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ProfileActivity : AppCompatActivity() {
+
+    private lateinit var authManager: AuthManager
 
     private lateinit var txtName: TextView
     private lateinit var txtContact: TextView
@@ -24,6 +27,8 @@ class ProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+
+        authManager = AuthManager(this)
 
         setupToolbar()
         setupViews()
@@ -51,15 +56,32 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun loadUserData() {
-        // Загружаем данные пользователя
-        val prefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
-        val name = prefs.getString("user_name", "Пользователь") ?: "Пользователь"
-        val email = prefs.getString("user_email", "user@example.com") ?: "user@example.com"
+        // Получаем текущего пользователя из AuthManager
+        val currentUser = authManager.getCurrentUser()
 
-        txtName.text = name
-        txtContact.text = email
+        if (currentUser != null) {
+            // Отображаем данные пользователя
+            txtName.text = currentUser.name
+            txtContact.text = currentUser.email
+
+            // Синхронизируем с auth_prefs
+            val prefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
+            prefs.edit().apply {
+                putString("user_name", currentUser.name)
+                putString("user_email", currentUser.email)
+                putString("user_phone", currentUser.phone)
+                putLong("user_id", currentUser.id)
+                apply()
+            }
+        } else {
+            // Если пользователь не найден, выходим на экран логина
+            Toast.makeText(this, "Пользователь не найден", Toast.LENGTH_SHORT).show()
+            logout()
+            return
+        }
 
         // Загружаем настройки
+        val prefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
         val notificationsEnabled = prefs.getBoolean("notifications_enabled", true)
         switchNotifications.isChecked = notificationsEnabled
     }
@@ -135,16 +157,16 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun showAboutDialog() {
         MaterialAlertDialogBuilder(this)
-            .setTitle("SafeWalk")
+            .setTitle("Sakta")
             .setMessage(
                 "Версия: 1.0.0\n\n" +
-                "SafeWalk - приложение для безопасной навигации по городу Бишкек.\n\n" +
-                "Приложение помогает:\n" +
-                "• Строить безопасные маршруты\n" +
-                "• Избегать опасных зон\n" +
-                "• Делиться местоположением с друзьями\n" +
-                "• Быстро вызывать помощь\n\n" +
-                "© 2024 SafeWalk Team"
+                        "Sakta - приложение для безопасной навигации по городу Бишкек.\n\n" +
+                        "Приложение помогает:\n" +
+                        "• Строить безопасные маршруты\n" +
+                        "• Избегать опасных зон\n" +
+                        "• Делиться местоположением с друзьями\n" +
+                        "• Быстро вызывать помощь\n\n" +
+                        "© 2025 Amanat Team"
             )
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss()
@@ -167,9 +189,15 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        // Очищаем данные сессии
+        // ВАЖНО: logout() только удаляет текущую сессию
+        // Данные пользователя остаются в users.json!
+        authManager.logout()
+
+        // Очищаем данные сессии из auth_prefs
         val prefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
         prefs.edit().clear().apply()
+
+        Toast.makeText(this, "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
 
         // Переходим на экран входа
         val intent = Intent(this, LoginActivity::class.java)
