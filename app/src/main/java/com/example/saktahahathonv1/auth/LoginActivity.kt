@@ -68,6 +68,9 @@ class LoginActivity : AppCompatActivity() {
 
         when (val result = authManager.login(emailOrPhone, password)) {
             is AuthResult.Success -> {
+                // Сохраняем данные пользователя в auth_prefs для ProfileActivity
+                saveUserToPrefs(result.user)
+
                 Toast.makeText(
                     this,
                     "Добро пожаловать, ${result.user.name}!",
@@ -80,6 +83,17 @@ class LoginActivity : AppCompatActivity() {
                 btnLogin.isEnabled = true
                 btnLogin.text = "Войти"
             }
+        }
+    }
+
+    private fun saveUserToPrefs(user: User) {
+        val prefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
+        prefs.edit().apply {
+            putString("user_name", user.name)
+            putString("user_email", user.email)
+            putString("user_phone", user.phone)
+            putLong("user_id", user.id)
+            apply()
         }
     }
 

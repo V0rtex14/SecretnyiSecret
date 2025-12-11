@@ -37,10 +37,13 @@ import com.example.saktahahathonv1.data.BishkekAddresses
 import com.example.saktahahathonv1.friends.FriendsActivity
 import com.example.saktahahathonv1.history.HistoryActivity
 import com.example.saktahahathonv1.profile.ProfileActivity
+import com.example.saktahahathonv1.auth.AuthManager
+import com.example.saktahahathonv1.auth.LoginActivity
 import kotlin.math.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var authManager: AuthManager
     private lateinit var mapView: MapView
     private lateinit var btnSos: com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
     private lateinit var bottomNavigation: com.google.android.material.bottomnavigation.BottomNavigationView
@@ -78,6 +81,17 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        authManager = AuthManager(this)
+
+        // ⚠️ КРИТИЧЕСКИ ВАЖНО: проверяем авторизацию ПЕРЕД загрузкой UI
+        if (!authManager.isLoggedIn()) {
+            // Пользователь не авторизован - редирект на LoginActivity
+            navigateToLogin()
+            return
+        }
+
+        // ✅ Пользователь авторизован - загружаем главный экран
         setContentView(R.layout.activity_main)
 
         Configuration.getInstance().load(
@@ -86,6 +100,7 @@ class MainActivity : AppCompatActivity() {
         )
         Configuration.getInstance().userAgentValue = packageName
 
+        // Инициализация UI
         mapView = findViewById(R.id.mapView)
         btnSos = findViewById(R.id.btnSos)
         bottomNavigation = findViewById(R.id.bottomNavigation)
@@ -99,6 +114,25 @@ class MainActivity : AppCompatActivity() {
         setupUI()
         loadDataAndInitEngines()
         checkPermissions()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Проверяем авторизацию при возврате в активити
+        if (!authManager.isLoggedIn()) {
+            navigateToLogin()
+            return
+        }
+
+        mapView.onResume()
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 
     private fun setupMap() {
@@ -217,7 +251,6 @@ class MainActivity : AppCompatActivity() {
             .setItems(options) { _, which ->
                 when (which) {
                     0, 1, 2, 3 -> {
-                        // TODO: реализовать фильтры
                         visualizeData()
                     }
                     4 -> {
@@ -228,31 +261,6 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton("Отмена", null)
             .show()
-    }
-
-    private fun showFriendsDemo() {
-        // Демо отслеживание друга
-        val demoFriend = GeoPoint(42.8766, 74.5708)
-
-        val friendMarker = Marker(mapView).apply {
-            position = demoFriend
-            title = "Алия (друг)"
-            snippet = "Последнее обновление: только что"
-            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-
-            // Используем иконку друга
-            try {
-                icon = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_map_marker_friend)
-            } catch (e: Exception) {
-                icon = createCircleDrawable(Color.GREEN, 24)
-            }
-        }
-
-        mapView.overlays.add(friendMarker)
-        mapView.controller.animateTo(demoFriend)
-        mapView.invalidate()
-
-        Toast.makeText(this, "Показано местоположение друга (демо)", Toast.LENGTH_LONG).show()
     }
 
     private fun loadDataAndInitEngines() {
@@ -280,9 +288,11 @@ class MainActivity : AppCompatActivity() {
 
                 visualizeData()
 
+                // Показываем имя пользователя
+                val currentUser = authManager.getCurrentUser()
                 Toast.makeText(
                     this@MainActivity,
-                    "SafeWalk готов! 🛡️",
+                    "Добро пожаловать, ${currentUser?.name} 🛡️",
                     Toast.LENGTH_SHORT
                 ).show()
 
@@ -625,8 +635,8 @@ class MainActivity : AppCompatActivity() {
 
                 val connection = java.net.URL(url).openConnection() as java.net.HttpURLConnection
                 connection.setRequestProperty("User-Agent", packageName)
-                connection.connectTimeout = 10000 // 10 seconds
-                connection.readTimeout = 10000 // 10 seconds
+                connection.connectTimeout = 10000
+                connection.readTimeout = 10000
                 connection.requestMethod = "GET"
 
                 val responseCode = connection.responseCode
@@ -790,8 +800,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             holder.detailsText.text = "$distance км • $duration мин • $riskLevel\n" +
-                "Освещённость: ${route.evaluation.lightCoverage.toInt()}% • " +
-                "Людность: ${route.evaluation.crowdCoverage.toInt()}%"
+                    "Освещённость: ${route.evaluation.lightCoverage.toInt()}% • " +
+                    "Людность: ${route.evaluation.crowdCoverage.toInt()}%"
 
             holder.container.removeAllViews()
             holder.container.addView(holder.titleText)
@@ -1118,13 +1128,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getAddressFromCoords(lat: Double, lon: Double): String {
-        // TODO: реальный reverse geocoding
-        return "Павлова улица" // Заглушка
+        return "Павлова улица"
     }
 
-
     private fun formatDate(dateStr: String): String {
-        // TODO: нормальное форматирование
         return dateStr.substring(0, 10)
     }
 
@@ -1161,7 +1168,6 @@ class MainActivity : AppCompatActivity() {
                 LOCATION_PERMISSION_CODE
             )
         } else {
-            // Permissions already granted, enable location tracking
             enableLocationTracking()
         }
     }
@@ -1177,7 +1183,6 @@ class MainActivity : AppCompatActivity() {
             LOCATION_PERMISSION_CODE -> {
                 if (grantResults.isNotEmpty() &&
                     grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                    // All permissions granted
                     enableLocationTracking()
                     Toast.makeText(
                         this,
@@ -1185,20 +1190,17 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
-                    // Permission denied
                     Toast.makeText(
                         this,
                         "Для работы приложения требуется доступ к местоположению",
                         Toast.LENGTH_LONG
                     ).show()
 
-                    // Check if we should show rationale
                     val shouldShowRationale = permissions.any { permission ->
                         ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
                     }
 
                     if (!shouldShowRationale) {
-                        // User selected "Don't ask again", show dialog to open settings
                         showPermissionSettingsDialog()
                     }
                 }
@@ -1231,11 +1233,6 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton("Отмена", null)
             .show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapView.onResume()
     }
 
     override fun onPause() {
