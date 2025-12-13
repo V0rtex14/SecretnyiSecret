@@ -12,8 +12,6 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
-
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +47,10 @@ import com.example.saktahahathonv1.ai.SafeGuardianAI
 import com.example.saktahahathonv1.ai.UserProfile
 import com.example.saktahahathonv1.ai.AnxietyLevel
 import com.example.saktahahathonv1.ai.LocationTracker
+import com.example.saktahahathonv1.sos.SosActivity
+import com.example.saktahahathonv1.route.SafeRouteActivity
+import com.example.saktahahathonv1.escort.EscortModeActivity
+import com.example.saktahahathonv1.tracking.TrackingActivity
 import android.widget.TextView
 import kotlin.math.*
 
@@ -58,12 +60,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
     private lateinit var btnSos: com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
     private lateinit var bottomNavigation: com.google.android.material.bottomnavigation.BottomNavigationView
-    private lateinit var btnMyLocation: FloatingActionButton
     private lateinit var btnZoomIn: FloatingActionButton
     private lateinit var btnZoomOut: FloatingActionButton
     private lateinit var cardProfile: com.google.android.material.card.MaterialCardView
     private lateinit var cardFilter: com.google.android.material.card.MaterialCardView
     private lateinit var cardAIAssistant: com.google.android.material.card.MaterialCardView
+    private lateinit var btnSafeRoute: MaterialCardView
+    private lateinit var btnEscortHome: MaterialCardView
+    private lateinit var cardZoneStatus: MaterialCardView
+    private lateinit var statusDot: View
+    private lateinit var txtSafetyStatus: TextView
+    private lateinit var txtZoneTitle: TextView
+    private lateinit var txtZoneSubtitle: TextView
+    private lateinit var imgZoneIcon: ImageView
 
     private var myLocationOverlay: MyLocationNewOverlay? = null
     private var routeLine: Polyline? = null
@@ -133,11 +142,14 @@ class MainActivity : AppCompatActivity() {
         cardProfile = findViewById(R.id.cardProfile)
         cardFilter = findViewById(R.id.cardFilter)
         cardAIAssistant = findViewById(R.id.cardAIAssistant)
-
-        setupMap()
-        setupUI()
-        loadDataAndInitEngines()
-        checkPermissions()
+        btnSafeRoute = findViewById(R.id.btnSafeRoute)
+        btnEscortHome = findViewById(R.id.btnEscortHome)
+        cardZoneStatus = findViewById(R.id.cardZoneStatus)
+        statusDot = findViewById(R.id.statusDot)
+        txtSafetyStatus = findViewById(R.id.txtSafetyStatus)
+        txtZoneTitle = findViewById(R.id.txtZoneTitle)
+        txtZoneSubtitle = findViewById(R.id.txtZoneSubtitle)
+        imgZoneIcon = findViewById(R.id.imgZoneIcon)
     }
 
     override fun onResume() {
@@ -283,19 +295,31 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+            .show()
+    }
 
-            AlertDialog.Builder(this)
-                .setTitle("Информация о зоне")
-                .setMessage("""
-                    Уровень риска: $riskLevel
-                    Коэффициент: ${String.format("%.2f", risk)}
-
-                    Инцидентов поблизости: ${countNearbyIncidents(currentPos)}
-                    Жалоб поблизости: ${countNearbyComplaints(currentPos)}
-                """.trimIndent())
-                .setPositiveButton("ОК", null)
-                .show()
+    private fun showZoneInfoDialog() {
+        val currentPos = myLocationOverlay?.myLocation ?: mapView.mapCenter as GeoPoint
+        val risk = if (::riskEngine.isInitialized) riskEngine.riskAtPoint(currentPos) else 0.0
+        val riskLabel = when {
+            risk < 0.5 -> "Низкий"
+            risk < 1.0 -> "Средний"
+            else -> "Высокий"
         }
+
+        AlertDialog.Builder(this)
+            .setTitle("Информация о зоне")
+            .setMessage(
+                """
+                Уровень риска: $riskLabel
+                Коэффициент: ${String.format("%.2f", risk)}
+
+                Инцидентов поблизости: ${countNearbyIncidents(currentPos)}
+                Жалоб поблизости: ${countNearbyComplaints(currentPos)}
+                """.trimIndent()
+            )
+            .setPositiveButton("ОК", null)
+            .show()
     }
 
     private fun countNearbyIncidents(pos: GeoPoint): Int {
@@ -952,6 +976,13 @@ class MainActivity : AppCompatActivity() {
         return candidates.minByOrNull { it.distance / 100 + it.priority }
     }
 
+    private data class SafeLocationResult(
+        val position: GeoPoint,
+        val name: String,
+        val distance: Double,
+        val priority: Double
+    )
+
     private suspend fun buildRouteWithRoadPriority(start: GeoPoint, end: GeoPoint): RouteData? {
         return withContext(Dispatchers.IO) {
             try {
@@ -1051,6 +1082,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     // ===== УТИЛИТЫ =====
+
+    private fun Double.format(digits: Int) = "%.${digits}f".format(this)
 
     private fun createCircleDrawable(color: Int, sizeDp: Int): android.graphics.drawable.Drawable {
         val sizePx = (sizeDp * resources.displayMetrics.density).toInt()
