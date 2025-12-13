@@ -17,6 +17,7 @@
     <string name="share">Поделиться</string>
     <string name="send">Отправить</string>
     <string name="loading">Загрузка...</string>
+    <string name="not_available">Недоступно</string>
     <string name="error">Ошибка</string>
     <string name="retry">Повторить</string>
     <string name="back">Назад</string>

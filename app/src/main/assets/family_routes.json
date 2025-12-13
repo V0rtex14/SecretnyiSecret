@@ -1,0 +1,74 @@
+[
+  {
+    "id":"child_karina",
+    "name":"Карина",
+    "age":12,
+    "relationship":"дочь",
+    "avatar":"K",
+    "phone":"+996 555 101 202",
+    "currentLocation":{"lat":42.8749,"lon":74.6030},
+    "lastUpdated":"2025-12-08T18:42:00",
+    "safeZone":{"center":{"lat":42.8754,"lon":74.6002},"radius":220},
+    "route": [
+      {"lat":42.8708,"lon":74.5937,"timestamp":"2025-12-08T17:55:00"},
+      {"lat":42.8729,"lon":74.5968,"timestamp":"2025-12-08T18:05:00"},
+      {"lat":42.8741,"lon":74.5991,"timestamp":"2025-12-08T18:15:00"},
+      {"lat":42.8749,"lon":74.6013,"timestamp":"2025-12-08T18:25:00"},
+      {"lat":42.8749,"lon":74.6030,"timestamp":"2025-12-08T18:42:00"}
+    ]
+  },
+  {
+    "id":"child_nur",
+    "name":"Нурсултан",
+    "age":14,
+    "relationship":"сын",
+    "avatar":"N",
+    "phone":"+996 555 303 404",
+    "currentLocation":{"lat":42.8818,"lon":74.5712},
+    "lastUpdated":"2025-12-08T18:38:00",
+    "safeZone":{"center":{"lat":42.8824,"lon":74.5680},"radius":260},
+    "route": [
+      {"lat":42.8851,"lon":74.5631,"timestamp":"2025-12-08T17:40:00"},
+      {"lat":42.8841,"lon":74.5659,"timestamp":"2025-12-08T17:55:00"},
+      {"lat":42.8830,"lon":74.5686,"timestamp":"2025-12-08T18:10:00"},
+      {"lat":42.8822,"lon":74.5703,"timestamp":"2025-12-08T18:25:00"},
+      {"lat":42.8818,"lon":74.5712,"timestamp":"2025-12-08T18:38:00"}
+    ]
+  },
+  {
+    "id":"child_amina",
+    "name":"Амина",
+    "age":10,
+    "relationship":"дочь",
+    "avatar":"A",
+    "phone":"+996 555 505 606",
+    "currentLocation":{"lat":42.8667,"lon":74.6208},
+    "lastUpdated":"2025-12-08T18:31:00",
+    "safeZone":{"center":{"lat":42.8674,"lon":74.6172},"radius":200},
+    "route": [
+      {"lat":42.8682,"lon":74.6129,"timestamp":"2025-12-08T17:35:00"},
+      {"lat":42.8677,"lon":74.6148,"timestamp":"2025-12-08T17:50:00"},
+      {"lat":42.8672,"lon":74.6166,"timestamp":"2025-12-08T18:05:00"},
+      {"lat":42.8669,"lon":74.6188,"timestamp":"2025-12-08T18:18:00"},
+      {"lat":42.8667,"lon":74.6208,"timestamp":"2025-12-08T18:31:00"}
+    ]
+  },
+  {
+    "id":"child_timur",
+    "name":"Тимур",
+    "age":15,
+    "relationship":"брат",
+    "avatar":"T",
+    "phone":"+996 555 707 808",
+    "currentLocation":{"lat":42.8542,"lon":74.5850},
+    "lastUpdated":"2025-12-08T18:28:00",
+    "safeZone":{"center":{"lat":42.8559,"lon":74.5824},"radius":230},
+    "route": [
+      {"lat":42.8584,"lon":74.5788,"timestamp":"2025-12-08T17:25:00"},
+      {"lat":42.8573,"lon":74.5809,"timestamp":"2025-12-08T17:42:00"},
+      {"lat":42.8561,"lon":74.5827,"timestamp":"2025-12-08T17:57:00"},
+      {"lat":42.8551,"lon":74.5842,"timestamp":"2025-12-08T18:12:00"},
+      {"lat":42.8542,"lon":74.5850,"timestamp":"2025-12-08T18:28:00"}
+    ]
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {"lat":42.8754,"lon":74.6031,"radius":280,"name":"Bishkek Park","timeOfDay":"evening"},
+  {"lat":42.8709,"lon":74.5904,"radius":240,"name":"ЦУМ","timeOfDay":"day"},
+  {"lat":42.8677,"lon":74.5569,"radius":260,"name":"Западный автовокзал","timeOfDay":"all"},
+  {"lat":42.8839,"lon":74.5655,"radius":220,"name":"Спортивная арена","timeOfDay":"evening"},
+  {"lat":42.8625,"lon":74.6161,"radius":210,"name":"Рынок Асанбай","timeOfDay":"morning"},
+  {"lat":42.8891,"lon":74.5812,"radius":230,"name":"Площадь Ала-Тоо","timeOfDay":"all"},
+  {"lat":42.8528,"lon":74.6037,"radius":190,"name":"ТЦ Dordoi Plaza","timeOfDay":"evening"},
+  {"lat":42.8788,"lon":74.5521,"radius":200,"name":"Южные ворота","timeOfDay":"all"},
+  {"lat":42.8947,"lon":74.6115,"radius":210,"name":"ТЦ Азия Молл","timeOfDay":"evening"},
+  {"lat":42.8721,"lon":74.5759,"radius":180,"name":"Парк Молодой гвардии","timeOfDay":"day"}
+]
