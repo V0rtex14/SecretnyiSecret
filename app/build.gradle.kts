@@ -71,6 +71,11 @@ dependencies {
 
     // Gson - Парсинг JSON
     implementation("com.google.code.gson:gson:2.10.1")
+    // JSON parsing
+    implementation("org.json:json:20231013")
+
+// Coroutines (уже должны быть)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     // Room - Локальная БД для кеширования
     val roomVersion = "2.6.1"
