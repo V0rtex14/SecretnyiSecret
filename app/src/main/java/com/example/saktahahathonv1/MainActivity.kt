@@ -19,8 +19,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -57,13 +57,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var authManager: AuthManager
     private lateinit var mapView: MapView
-    private lateinit var btnSos: ExtendedFloatingActionButton
-    private lateinit var bottomNavigation: BottomNavigationView
-    private lateinit var btnZoomIn: ImageButton
-    private lateinit var btnZoomOut: ImageButton
-    private lateinit var cardProfile: MaterialCardView
-    private lateinit var cardFilter: MaterialCardView
-    private lateinit var cardAIAssistant: MaterialCardView
+    private lateinit var btnSos: com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    private lateinit var bottomNavigation: com.google.android.material.bottomnavigation.BottomNavigationView
+    private lateinit var btnZoomIn: FloatingActionButton
+    private lateinit var btnZoomOut: FloatingActionButton
+    private lateinit var cardProfile: com.google.android.material.card.MaterialCardView
+    private lateinit var cardFilter: com.google.android.material.card.MaterialCardView
+    private lateinit var cardAIAssistant: com.google.android.material.card.MaterialCardView
     private lateinit var btnSafeRoute: MaterialCardView
     private lateinit var btnEscortHome: MaterialCardView
     private lateinit var cardZoneStatus: MaterialCardView
