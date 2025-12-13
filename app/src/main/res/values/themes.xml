@@ -1,9 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.SaktaHAHATHONV1" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+    <!-- Base application theme - Dark iOS-style -->
+    <style name="Base.Theme.Sakta" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimaryContainer">@color/primary_container</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimaryContainer">@color/white</item>
+
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/accent_purple</item>
+        <item name="colorSecondaryContainer">@color/primary_surface</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/background_dark</item>
+        <item name="colorSurface">@color/surface_dark</item>
+        <item name="colorSurfaceVariant">@color/surface_elevated_dark</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+
+        <!-- Error colors -->
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/white</item>
+
+        <!-- Outline -->
+        <item name="colorOutline">@color/border</item>
+
+        <!-- Status bar and navigation bar -->
+        <item name="android:statusBarColor">@color/background_dark</item>
+        <item name="android:navigationBarColor">@color/bottom_nav_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+
+        <!-- Window background -->
+        <item name="android:windowBackground">@color/background_dark</item>
+
+        <!-- Default text colors -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+
+        <!-- Ripple color -->
+        <item name="android:colorControlHighlight">@color/primary_container</item>
+
+        <!-- Bottom Navigation style -->
+        <item name="bottomNavigationStyle">@style/Widget.Sakta.BottomNavigation</item>
+
+        <!-- Material Components -->
+        <item name="materialButtonStyle">@style/Widget.Sakta.Button</item>
+        <item name="materialCardViewStyle">@style/Widget.Sakta.Card</item>
+        <item name="floatingActionButtonStyle">@style/Widget.Sakta.FAB</item>
     </style>
 
-    <style name="Theme.SaktaHAHATHONV1" parent="Base.Theme.SaktaHAHATHONV1" />
+    <style name="Theme.Sakta" parent="Base.Theme.Sakta" />
+
+    <!-- Legacy theme name for compatibility -->
+    <style name="Theme.SaktaHAHATHONV1" parent="Theme.Sakta" />
+    <style name="Base.Theme.SaktaHAHATHONV1" parent="Base.Theme.Sakta" />
+
+    <!-- Splash Screen Theme -->
+    <style name="Theme.Sakta.Splash" parent="Theme.Sakta">
+        <item name="android:windowBackground">@color/background_dark</item>
+    </style>
+
+    <!-- SOS Emergency Theme -->
+    <style name="Theme.Sakta.Emergency" parent="Theme.Sakta">
+        <item name="android:colorBackground">@color/sos_background</item>
+        <item name="android:windowBackground">@color/sos_background</item>
+        <item name="colorSurface">@color/sos_surface</item>
+        <item name="colorPrimary">@color/sos_red</item>
+        <item name="android:statusBarColor">@color/sos_background</item>
+    </style>
+
+    <!-- Dialog Theme -->
+    <style name="Theme.Sakta.Dialog" parent="ThemeOverlay.Material3.Dialog">
+        <item name="android:background">@color/surface_dark</item>
+        <item name="android:windowBackground">@color/surface_dark</item>
+        <item name="colorSurface">@color/surface_dark</item>
+    </style>
+
+    <!-- Bottom Sheet Theme -->
+    <style name="Theme.Sakta.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/Widget.Sakta.BottomSheet</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
 </resources>

@@ -7,12 +7,22 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.preference.PreferenceManager
+
+import android.view.View
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -93,13 +103,12 @@ class MainActivity : AppCompatActivity() {
 
         authManager = AuthManager(this)
 
-        // ⚠️ КРИТИЧЕСКИ ВАЖНО: проверяем авторизацию ПЕРЕД загрузкой UI
+        // Проверяем авторизацию ПЕРЕД загрузкой UI
         if (!authManager.isLoggedIn()) {
             navigateToLogin()
             return
         }
 
-        // ✅ Пользователь авторизован - загружаем главный экран
         setContentView(R.layout.activity_main)
 
         Configuration.getInstance().load(
@@ -108,11 +117,17 @@ class MainActivity : AppCompatActivity() {
         )
         Configuration.getInstance().userAgentValue = packageName
 
-        // Инициализация UI
+        initViews()
+        setupMap()
+        setupUI()
+        loadDataAndInitEngines()
+        checkPermissions()
+    }
+
+    private fun initViews() {
         mapView = findViewById(R.id.mapView)
         btnSos = findViewById(R.id.btnSos)
         bottomNavigation = findViewById(R.id.bottomNavigation)
-        btnMyLocation = findViewById(R.id.btnMyLocation)
         btnZoomIn = findViewById(R.id.btnZoomIn)
         btnZoomOut = findViewById(R.id.btnZoomOut)
         cardProfile = findViewById(R.id.cardProfile)
@@ -134,6 +149,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         mapView.onResume()
+        bottomNavigation.selectedItemId = R.id.nav_home
     }
 
     private fun navigateToLogin() {
@@ -165,7 +181,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 return false
             }
-
             override fun longPressHelper(p: GeoPoint?): Boolean = false
         })
         mapView.overlays.add(eventsOverlay)
@@ -182,7 +197,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupUI() {
         // SOS
         btnSos.setOnClickListener {
-            buildSOSRoute()
+            startActivity(Intent(this, SosActivity::class.java))
         }
 
         // Зум кнопки
@@ -194,24 +209,24 @@ class MainActivity : AppCompatActivity() {
             mapView.controller.zoomOut()
         }
 
-        // Моё местоположение
-        btnMyLocation.setOnClickListener {
-            myLocationOverlay?.myLocation?.let { location ->
-                mapView.controller.animateTo(location)
-                mapView.controller.setZoom(16.0)
-            } ?: run {
-                Toast.makeText(this, "Местоположение недоступно", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         // Профиль
         cardProfile.setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
 
-        // Фильтры
-        cardFilter.setOnClickListener {
-            showFilterDialog()
+        // Безопасный маршрут
+        btnSafeRoute.setOnClickListener {
+            startActivity(Intent(this, SafeRouteActivity::class.java))
+        }
+
+        // Проводить домой (режим сопровождения)
+        btnEscortHome.setOnClickListener {
+            startActivity(Intent(this, EscortModeActivity::class.java))
+        }
+
+        // Карточка статуса зоны
+        cardZoneStatus.setOnClickListener {
+            showZoneInfoDialog()
         }
 
         // AI Assistant
@@ -223,19 +238,15 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
-                    Toast.makeText(this, "Главная", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.nav_friends -> {
-                    startActivity(Intent(this, FriendsActivity::class.java))
-                    true
-                }
-                R.id.nav_route -> {
-                    showRouteDialog()
+                    // Уже на главном экране
                     true
                 }
                 R.id.nav_history -> {
                     startActivity(Intent(this, HistoryActivity::class.java))
+                    true
+                }
+                R.id.nav_tracking -> {
+                    startActivity(Intent(this, TrackingActivity::class.java))
                     true
                 }
                 R.id.nav_profile -> {
@@ -272,8 +283,27 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            .setNegativeButton("Отмена", null)
-            .show()
+
+            AlertDialog.Builder(this)
+                .setTitle("Информация о зоне")
+                .setMessage("""
+                    Уровень риска: $riskLevel
+                    Коэффициент: ${String.format("%.2f", risk)}
+
+                    Инцидентов поблизости: ${countNearbyIncidents(currentPos)}
+                    Жалоб поблизости: ${countNearbyComplaints(currentPos)}
+                """.trimIndent())
+                .setPositiveButton("ОК", null)
+                .show()
+        }
+    }
+
+    private fun countNearbyIncidents(pos: GeoPoint): Int {
+        return incidents.count { distanceMeters(pos, GeoPoint(it.lat, it.lon)) < 500 }
+    }
+
+    private fun countNearbyComplaints(pos: GeoPoint): Int {
+        return complaints.count { distanceMeters(pos, GeoPoint(it.lat, it.lon)) < 500 }
     }
 
     private fun loadDataAndInitEngines() {
@@ -315,20 +345,69 @@ class MainActivity : AppCompatActivity() {
                 )
 
                 visualizeData()
+                updateSafetyStatus()
 
                 val currentUser = authManager.getCurrentUser()
                 Toast.makeText(
                     this@MainActivity,
-                    "Добро пожаловать, ${currentUser?.name} 🛡️",
+                    "Добро пожаловать, ${currentUser?.name ?: "Пользователь"}",
                     Toast.LENGTH_SHORT
                 ).show()
 
             } catch (e: Exception) {
                 Toast.makeText(
                     this@MainActivity,
-                    "Ошибка: ${e.message}",
+                    "Ошибка загрузки данных: ${e.message}",
                     Toast.LENGTH_LONG
                 ).show()
+            }
+        }
+    }
+
+    private fun updateSafetyStatus() {
+        val currentPos = myLocationOverlay?.myLocation ?: mapView.mapCenter as GeoPoint
+
+        if (::riskEngine.isInitialized) {
+            val risk = riskEngine.riskAtPoint(currentPos)
+
+            if (risk < 0.5) {
+                // Безопасная зона
+                txtSafetyStatus.text = getString(R.string.you_are_safe)
+                statusDot.setBackgroundResource(R.drawable.bg_circle_green)
+
+                txtZoneTitle.text = getString(R.string.current_zone_safe)
+                txtZoneSubtitle.text = getString(R.string.no_incidents)
+                imgZoneIcon.setImageResource(R.drawable.ic_check_circle)
+                imgZoneIcon.setColorFilter(ContextCompat.getColor(this, R.color.success))
+
+                cardZoneStatus.setCardBackgroundColor(ContextCompat.getColor(this, R.color.card_safe_bg))
+                cardZoneStatus.strokeColor = ContextCompat.getColor(this, R.color.card_safe_border)
+            } else if (risk < 1.5) {
+                // Средний риск
+                txtSafetyStatus.text = "Будьте внимательны"
+                statusDot.setBackgroundResource(R.drawable.bg_circle_orange)
+
+                txtZoneTitle.text = "Текущая зона: Средний риск"
+                val nearbyIncidents = countNearbyIncidents(currentPos)
+                txtZoneSubtitle.text = "$nearbyIncidents инцидентов за последний месяц"
+                imgZoneIcon.setImageResource(R.drawable.ic_warning)
+                imgZoneIcon.setColorFilter(ContextCompat.getColor(this, R.color.warning))
+
+                cardZoneStatus.setCardBackgroundColor(ContextCompat.getColor(this, R.color.card_warning_bg))
+                cardZoneStatus.strokeColor = ContextCompat.getColor(this, R.color.card_warning_border)
+            } else {
+                // Опасная зона
+                txtSafetyStatus.text = getString(R.string.you_are_in_danger)
+                statusDot.setBackgroundResource(R.drawable.bg_circle_red)
+
+                txtZoneTitle.text = getString(R.string.current_zone_danger)
+                val nearbyIncidents = countNearbyIncidents(currentPos)
+                txtZoneSubtitle.text = "$nearbyIncidents инцидентов за последний месяц"
+                imgZoneIcon.setImageResource(R.drawable.ic_warning)
+                imgZoneIcon.setColorFilter(ContextCompat.getColor(this, R.color.error))
+
+                cardZoneStatus.setCardBackgroundColor(ContextCompat.getColor(this, R.color.card_danger_bg))
+                cardZoneStatus.strokeColor = ContextCompat.getColor(this, R.color.card_danger_border)
             }
         }
     }
@@ -413,8 +492,8 @@ class MainActivity : AppCompatActivity() {
         for (sp in safePlaces) {
             val safeCircle = Polygon(mapView).apply {
                 points = Polygon.pointsAsCircle(GeoPoint(sp.lat, sp.lon), sp.radius)
-                fillColor = Color.argb(20, 0, 255, 0)
-                strokeColor = Color.argb(60, 0, 200, 0)
+                fillColor = Color.argb(20, 52, 199, 89) // success color with alpha
+                strokeColor = Color.argb(60, 52, 199, 89)
                 strokeWidth = 2f
             }
 
@@ -1015,7 +1094,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun formatDate(dateStr: String): String {
-        return dateStr.substring(0, 10)
+        return try {
+            dateStr.substring(0, 10)
+        } catch (e: Exception) {
+            dateStr
+        }
     }
 
     private fun distanceMeters(a: GeoPoint, b: GeoPoint): Double {
@@ -1029,8 +1112,6 @@ class MainActivity : AppCompatActivity() {
         val c = 2 * atan2(sqrt(x), sqrt(1 - x))
         return R * c
     }
-
-    private fun Double.format(digits: Int) = "%.${digits}f".format(this)
 
     private fun checkPermissions() {
         val permissions = arrayOf(
@@ -1086,12 +1167,3 @@ class MainActivity : AppCompatActivity() {
         safeGuardianAI.deactivate()
     }
 }
-
-// ===== ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ =====
-
-data class SafeLocationResult(
-    val position: GeoPoint,
-    val name: String,
-    val distance: Double,
-    val priority: Double
-)
