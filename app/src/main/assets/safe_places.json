@@ -1,1 +1,17 @@
-[{"id":"sp1","lat":42.8746,"lon":74.5698,"name":"УПСМ №1 Свердловский район","type":"police","radius":200,"address":"пр. Чуй, 101","phone":"102","hours":"24/7"},{"id":"sp2","lat":42.8766,"lon":74.5708,"name":"Городская больница №1","type":"hospital","radius":150,"address":"ул. Тоголока Молдо, 1","phone":"103","hours":"24/7"},{"id":"sp3","lat":42.8735,"lon":74.5715,"name":"Аптека 24/7","type":"pharmacy","radius":50,"address":"пр. Манаса, 45","phone":"+996 312 123 456","hours":"24/7"}]
+[
+  {"id":201,"lat":42.8781,"lon":74.5679,"type":"POLICE","name":"Пост полиции у Парка Панфилова","radius":350,"category":"police_post"},
+  {"id":202,"lat":42.8726,"lon":74.5798,"type":"SHOP24","name":"Супермаркет 24/7 на Московской","radius":220,"category":"store_24_7"},
+  {"id":203,"lat":42.8864,"lon":74.5586,"type":"HOSPITAL","name":"Травмпункт №3","radius":300,"category":"clinic"},
+  {"id":204,"lat":42.8651,"lon":74.6032,"type":"CAFE24","name":"Кофейня с камерой наблюдения","radius":180,"category":"safe_zone"},
+  {"id":205,"lat":42.8922,"lon":74.5735,"type":"POLICE","name":"Мобильный патруль","radius":280,"category":"police_patrol"},
+  {"id":206,"lat":42.8833,"lon":74.5458,"type":"SHOP24","name":"Минимаркет у жилмассива","radius":160,"category":"store_24_7"},
+  {"id":207,"lat":42.8479,"lon":74.5934,"type":"HOSPITAL","name":"Детская клиника Сейтек","radius":250,"category":"clinic"},
+  {"id":208,"lat":42.8612,"lon":74.6209,"type":"CAFE24","name":"Стрит-фуд яркий свет","radius":170,"category":"safe_zone"},
+  {"id":209,"lat":42.8757,"lon":74.6116,"type":"SHOP24","name":"24/7 Market Юг-2","radius":190,"category":"store_24_7"},
+  {"id":210,"lat":42.8572,"lon":74.5723,"type":"POLICE","name":"Пост ДПС на проспекте Жибек-Жолу","radius":320,"category":"police_post"},
+  {"id":211,"lat":42.8897,"lon":74.5848,"type":"CAFE24","name":"Кофейня у медуниверситета","radius":150,"category":"safe_zone"},
+  {"id":212,"lat":42.8703,"lon":74.5539,"type":"SHOP24","name":"Ночной магазин у ТЭЦ","radius":210,"category":"store_24_7"},
+  {"id":213,"lat":42.8838,"lon":74.6007,"type":"POLICE","name":"КПП в парке Победы","radius":260,"category":"police_post"},
+  {"id":214,"lat":42.8524,"lon":74.6125,"type":"HOSPITAL","name":"Клиника УМЦ","radius":240,"category":"clinic"},
+  {"id":215,"lat":42.8666,"lon":74.5891,"type":"CAFE24","name":"Кофе-поинт рядом с БГУ","radius":160,"category":"safe_zone"}
+]
