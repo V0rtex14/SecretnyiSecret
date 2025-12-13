@@ -1,7 +1,13 @@
 <resources>
-    <string name="app_name">SafeWalk</string>
+    <string name="app_name">Sakta</string>
+    <string name="app_subtitle">Безопасная навигация</string>
 
-    <!-- Common -->
+    <!-- ==================== АВТОРИЗАЦИЯ ==================== -->
+    <string name="login_title">Войти в аккаунт</string>
+    <string name="email_or_phone">Email или телефон</string>
+    <string name="or">или</string>
+
+    <!-- ==================== ОБЩИЕ ==================== -->
     <string name="close">Закрыть</string>
     <string name="cancel">Отмена</string>
     <string name="ok">ОК</string>
@@ -13,11 +19,62 @@
     <string name="loading">Загрузка...</string>
     <string name="error">Ошибка</string>
     <string name="retry">Повторить</string>
+    <string name="back">Назад</string>
+    <string name="next">Далее</string>
+    <string name="done">Готово</string>
+    <string name="add">Добавить</string>
 
-    <!-- Escort Screen -->
-    <string name="escort_active">Сопровождение активно</string>
-    <string name="escort_start">Начать сопровождение</string>
-    <string name="escort_stop">Остановить сопровождение</string>
+    <!-- ==================== ГЛАВНЫЙ ЭКРАН ==================== -->
+    <string name="you_are_safe">Вы в безопасной зоне</string>
+    <string name="you_are_in_danger">Вы в опасной зоне</string>
+    <string name="your_location">Ваше местоположение</string>
+    <string name="current_zone_safe">Текущая зона: Безопасно</string>
+    <string name="current_zone_danger">Текущая зона: Опасно</string>
+    <string name="incidents_last_month">%d инцидентов за последний месяц</string>
+    <string name="no_incidents">0 инцидентов за последний месяц</string>
+
+    <!-- ==================== КНОПКИ ДЕЙСТВИЙ ==================== -->
+    <string name="safe_route">Безопасный маршрут</string>
+    <string name="escort_home">Проводить домой</string>
+    <string name="sos_emergency">SOS Экстренная помощь</string>
+    <string name="report_danger">Сообщить об опасности</string>
+
+    <!-- ==================== КАРТА ==================== -->
+    <string name="my_location">Мое местоположение</string>
+    <string name="zoom_in">Увеличить</string>
+    <string name="zoom_out">Уменьшить</string>
+    <string name="sos">SOS</string>
+    <string name="build_route">Построить маршрут</string>
+    <string name="mark_danger">Отметить опасное место</string>
+    <string name="location_unavailable">Местоположение недоступно</string>
+
+    <!-- ==================== БЕЗОПАСНЫЙ МАРШРУТ ==================== -->
+    <string name="safe_route_title">Безопасный маршрут</string>
+    <string name="regular_route">Обычный маршрут</string>
+    <string name="route_distance">%s км</string>
+    <string name="route_time">%d мин</string>
+    <string name="avoids_danger_zones">Избегает %d опасные зоны</string>
+    <string name="start_navigation">Начать навигацию</string>
+    <string name="select_destination">Выберите пункт назначения</string>
+    <string name="from_location">Откуда</string>
+    <string name="to_location">Куда</string>
+    <string name="my_current_location">Моё местоположение</string>
+    <string name="building_routes">Строим маршруты...</string>
+    <string name="route_not_found">Не удалось построить маршрут</string>
+    <string name="route_safe_level">Безопасно</string>
+    <string name="route_moderate_risk">Умеренный риск</string>
+    <string name="route_high_risk">Высокий риск</string>
+
+    <!-- ==================== РЕЖИМ СОПРОВОЖДЕНИЯ ==================== -->
+    <string name="escort_mode">Режим сопровождения</string>
+    <string name="escort_active">Вас сопровождают</string>
+    <string name="escort_mode_active">Режим активен</string>
+    <string name="all_ok">Всё в порядке</string>
+    <string name="distance_to_destination">До цели: %s</string>
+    <string name="current_zone">Текущая зона: %s</string>
+    <string name="notifications_sent">Уведомления отправлены:</string>
+    <string name="finish_escort">Завершить сопровождение</string>
+    <string name="start_escort">Начать сопровождение</string>
     <string name="escort_share">Поделиться местоположением</string>
     <string name="escort_remaining">Осталось</string>
     <string name="escort_arrival">Прибытие</string>
@@ -25,17 +82,158 @@
     <string name="escort_turn_right">Поверните направо</string>
     <string name="escort_turn_left">Поверните налево</string>
     <string name="escort_continue_straight">Продолжайте прямо</string>
-    <string name="escort_arrived">Вы прибыли</string>
+    <string name="escort_arrived">Вы прибыли!</string>
+    <string name="select_home_address">Выберите домашний адрес</string>
+    <string name="who_to_notify">Кто будет уведомлен:</string>
 
-    <!-- Map -->
-    <string name="my_location">Мое местоположение</string>
-    <string name="zoom_in">Увеличить</string>
-    <string name="zoom_out">Уменьшить</string>
-    <string name="sos">SOS</string>
-    <string name="build_route">Построить маршрут</string>
-    <string name="mark_danger">Отметить опасное место</string>
+    <!-- ==================== SOS СИСТЕМА ==================== -->
+    <string name="emergency_situation">Экстренная ситуация</string>
+    <string name="emergency">Экстренная</string>
+    <string name="sos_activated">SOS активирован</string>
+    <string name="your_location_sent">Ваше местоположение отправлено:</string>
+    <string name="trusted_contacts_count">Доверенные контакты (%d)</string>
+    <string name="emergency_services">Службы спасения</string>
+    <string name="call_102">Позвонить 102</string>
+    <string name="recording_audio">Запись звука...</string>
+    <string name="false_alarm">Ложная тревога</string>
+    <string name="hold_to_activate">Удерживайте для активации</string>
+    <string name="sending_location">Отправка местоположения...</string>
+    <string name="notifying_contacts">Уведомление контактов...</string>
+    <string name="sharing_live_location">Публикация местоположения...</string>
+    <string name="help_signal_active">СИГНАЛ ПОМОЩИ АКТИВЕН</string>
+    <string name="cancel_sos">Отменить SOS</string>
+    <string name="sos_countdown">SOS через %d...</string>
 
-    <!-- Friends -->
+    <!-- ==================== ПРОФИЛЬ ==================== -->
+    <string name="profile">Профиль</string>
+    <string name="user_mode">Режим пользователя</string>
+    <string name="woman">Женщина</string>
+    <string name="man">Мужчина</string>
+    <string name="trusted_contacts">Доверенные контакты</string>
+    <string name="add_contact">+ Добавить контакт</string>
+    <string name="settings">Настройки</string>
+    <string name="notifications">Уведомления</string>
+    <string name="privacy">Конфиденциальность</string>
+    <string name="transport_mode">Режим транспорта</string>
+    <string name="child_tracking">Отслеживание детей</string>
+    <string name="about">О приложении</string>
+    <string name="logout">Выйти</string>
+    <string name="logout_confirm">Вы уверены, что хотите выйти?</string>
+    <string name="edit_profile">Редактировать профиль</string>
+    <string name="phone_number">Номер телефона</string>
+
+    <!-- ==================== ОТСЛЕЖИВАНИЕ ==================== -->
+    <string name="tracking">Отслеживание</string>
+    <string name="in_safe_zone">В безопасной зоне</string>
+    <string name="route_info">%s → %s</string>
+    <string name="updated_ago">Обновлено: %s назад</string>
+    <string name="call">Позвонить</string>
+    <string name="write_message">Написать</string>
+    <string name="activity_history">История активности</string>
+    <string name="left_school">Вышла из школы</string>
+    <string name="entered_store">Зашла в магазин</string>
+    <string name="add_child">Добавить ребенка</string>
+    <string name="child_name">Имя ребенка</string>
+    <string name="child_phone">Телефон ребенка</string>
+    <string name="daughter">дочь</string>
+    <string name="son">сын</string>
+
+    <!-- ==================== СООБЩИТЬ ОБ ОПАСНОСТИ ==================== -->
+    <string name="report_dangerous_place">Сообщить об опасном месте</string>
+    <string name="select_danger_type">Выберите тип опасности</string>
+    <string name="harassment">Домогательство</string>
+    <string name="theft">Кража</string>
+    <string name="assault">Нападение</string>
+    <string name="suspicious_activity">Подозрительная активность</string>
+    <string name="poor_lighting">Плохое освещение</string>
+    <string name="other">Другое</string>
+    <string name="danger_level">Уровень опасности</string>
+    <string name="add_comment">Добавить комментарий (опционально)</string>
+    <string name="report_submitted">Жалоба отправлена</string>
+    <string name="tap_to_select_location">Нажмите на карту, чтобы выбрать место</string>
+
+    <!-- ==================== ДОВЕРЕННЫЕ КОНТАКТЫ ==================== -->
+    <string name="mom">Мама</string>
+    <string name="sister">Сестра</string>
+    <string name="friend">Друг</string>
+    <string name="contact_phone">%s</string>
+    <string name="select_contact">Выбрать контакт</string>
+    <string name="enter_phone">Введите номер телефона</string>
+    <string name="enter_name">Введите имя</string>
+    <string name="relationship">Кем приходится</string>
+
+    <!-- ==================== ИСТОРИЯ ==================== -->
+    <string name="history">История</string>
+    <string name="route_history">История маршрутов</string>
+    <string name="no_history">История пуста</string>
+    <string name="total_routes">Маршрутов</string>
+    <string name="total_distance">Расстояние</string>
+    <string name="avg_safety">Безопасность</string>
+    <string name="favorite_routes">Избранные маршруты</string>
+
+    <!-- ==================== БЕЗОПАСНОСТЬ ==================== -->
+    <string name="danger_zone">Опасная зона</string>
+    <string name="entering_danger_zone">Вы входите в опасную зону!</string>
+    <string name="safe_place">Безопасное место</string>
+    <string name="safe">Безопасно</string>
+    <string name="police">Полиция</string>
+    <string name="hospital">Больница</string>
+    <string name="lit_street">Освещенная улица</string>
+    <string name="crowded_area">Людное место</string>
+    <string name="shop_24">Магазин 24/7</string>
+    <string name="cafe_24">Кафе 24/7</string>
+
+    <!-- ==================== НАВИГАЦИЯ ==================== -->
+    <string name="nav_home">Главная</string>
+    <string name="nav_history">История</string>
+    <string name="nav_profile">Профиль</string>
+    <string name="nav_tracking">Слежение</string>
+
+    <!-- ==================== АВТОРИЗАЦИЯ ==================== -->
+    <string name="login">Вход</string>
+    <string name="register">Регистрация</string>
+    <string name="email">Email</string>
+    <string name="password">Пароль</string>
+    <string name="confirm_password">Подтвердите пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="no_account">Нет аккаунта?</string>
+    <string name="have_account">Уже есть аккаунт?</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="sign_in">Войти</string>
+    <string name="welcome_back">С возвращением!</string>
+    <string name="create_account">Создать аккаунт</string>
+    <string name="full_name">Полное имя</string>
+
+    <!-- ==================== РАЗРЕШЕНИЯ ==================== -->
+    <string name="location_permission_required">Требуется доступ к местоположению</string>
+    <string name="location_permission_message">Для работы Sakta необходим доступ к вашему местоположению. Пожалуйста, включите разрешение в настройках приложения.</string>
+    <string name="open_settings">Открыть настройки</string>
+    <string name="location_granted">Доступ к местоположению предоставлен</string>
+
+    <!-- ==================== ОШИБКИ ==================== -->
+    <string name="error_network">Ошибка сети</string>
+    <string name="error_location">Не удалось определить местоположение</string>
+    <string name="error_route">Не удалось построить маршрут</string>
+    <string name="error_unknown">Неизвестная ошибка</string>
+    <string name="try_again">Попробуйте снова</string>
+
+    <!-- ==================== ДЕМО КОНТАКТЫ ==================== -->
+    <string name="demo_contact_mom">Мама</string>
+    <string name="demo_contact_sister">Алия (сестра)</string>
+    <string name="demo_contact_friend">Марат (друг)</string>
+    <string name="demo_phone_mom">+996 555 111 222</string>
+    <string name="demo_phone_sister">+996 555 333 444</string>
+    <string name="demo_phone_friend">+996 555 555 666</string>
+    <string name="demo_user_name">Айнур</string>
+    <string name="demo_user_phone">+996 555 123 456</string>
+    <string name="demo_child_name">Алина</string>
+
+    <!-- ==================== ВРЕМЯ ==================== -->
+    <string name="minutes_ago">%d мин назад</string>
+    <string name="hours_ago">%d ч назад</string>
+    <string name="just_now">Только что</string>
+
+    <!-- ==================== LEGACY (compatibility) ==================== -->
     <string name="friends">Друзья</string>
     <string name="add_friend">Добавить друга</string>
     <string name="remove_friend">Удалить друга</string>
@@ -45,39 +243,13 @@
     <string name="friend_online">Онлайн</string>
     <string name="friend_offline">Не в сети</string>
     <string name="friend_sharing_location">Делится местоположением</string>
-
-    <!-- Family -->
     <string name="family">Семья</string>
     <string name="children">Дети</string>
-    <string name="add_child">Добавить ребенка</string>
     <string name="child_location">Местоположение ребенка</string>
     <string name="safe_zone">Безопасная зона</string>
     <string name="entered_safe_zone">Вошел в безопасную зону</string>
     <string name="left_safe_zone">Покинул безопасную зону</string>
+    <string name="escort_stop">Остановить сопровождение</string>
+    <string name="escort_active_legacy">Сопровождение активно</string>
 
-    <!-- History -->
-    <string name="history">История</string>
-    <string name="route_history">История маршрутов</string>
-    <string name="no_history">История пуста</string>
-    <string name="total_routes">Маршрутов</string>
-    <string name="total_distance">Расстояние</string>
-    <string name="avg_safety">Безопасность</string>
-
-    <!-- Profile -->
-    <string name="profile">Профиль</string>
-    <string name="settings">Настройки</string>
-    <string name="privacy">Приватность</string>
-    <string name="notifications">Уведомления</string>
-    <string name="about">О приложении</string>
-    <string name="logout">Выйти</string>
-    <string name="logout_confirm">Вы уверены, что хотите выйти?</string>
-
-    <!-- Safety -->
-    <string name="danger_zone">Опасная зона</string>
-    <string name="entering_danger_zone">Вы входите в опасную зону!</string>
-    <string name="safe_place">Безопасное место</string>
-    <string name="police">Полиция</string>
-    <string name="hospital">Больница</string>
-    <string name="lit_street">Освещенная улица</string>
-    <string name="crowded_area">Людное место</string>
 </resources>

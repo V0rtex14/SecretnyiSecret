@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shadow/glow -->
+    <item android:left="2dp" android:top="2dp">
+        <shape android:shape="oval">
+            <solid android:color="#4034C759"/>
+            <size android:width="44dp" android:height="44dp"/>
+        </shape>
+    </item>
+    <!-- Main circle background -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#34C759"/>
+            <stroke android:width="3dp" android:color="#FFFFFF"/>
+            <size android:width="40dp" android:height="40dp"/>
+        </shape>
+    </item>
+    <!-- Shield icon (approximated with shapes) -->
+    <item android:left="10dp" android:top="8dp" android:right="10dp" android:bottom="12dp">
+        <shape>
+            <solid android:color="#FFFFFF"/>
+            <corners android:topLeftRadius="10dp" android:topRightRadius="10dp"
+                     android:bottomLeftRadius="4dp" android:bottomRightRadius="4dp"/>
+            <size android:width="20dp" android:height="20dp"/>
+        </shape>
+    </item>
+</layer-list>

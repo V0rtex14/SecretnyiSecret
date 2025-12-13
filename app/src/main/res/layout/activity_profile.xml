@@ -4,44 +4,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="@color/background">
 
     <!-- Верхняя панель -->
-    <com.google.android.material.appbar.AppBarLayout
+    <LinearLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:elevation="4dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="@color/surface_dark">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#6B4EFF"
-            app:title="Профиль"
-            app:titleTextColor="@android:color/white"
-            app:navigationIcon="?attr/homeAsUpIndicator" />
+        <TextView
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="←"
+            android:textSize="24sp"
+            android:textColor="@color/white"
+            android:padding="8dp" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Профиль"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_marginEnd="32dp" />
+
+    </LinearLayout>
 
     <!-- Основной контент -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_marginTop="64dp"
+        android:clipToPadding="false"
+        android:paddingBottom="24dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
 
             <!-- Профиль пользователя -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -51,21 +70,25 @@
                     android:gravity="center">
 
                     <!-- Аватар -->
-                    <com.google.android.material.card.MaterialCardView
+                    <FrameLayout
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        app:cardCornerRadius="50dp"
-                        app:cardElevation="4dp"
                         android:layout_marginBottom="16dp">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_avatar_circle" />
 
                         <ImageView
                             android:id="@+id/imgAvatar"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="center"
                             android:src="@drawable/ic_profile"
-                            android:scaleType="centerCrop" />
+                            app:tint="@color/primary" />
 
-                    </com.google.android.material.card.MaterialCardView>
+                    </FrameLayout>
 
                     <!-- Имя -->
                     <TextView
@@ -73,9 +96,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Имя Пользователя"
-                        android:textSize="20sp"
+                        android:textSize="22sp"
                         android:textStyle="bold"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/white"
                         android:layout_marginBottom="4dp" />
 
                     <!-- Email/Phone -->
@@ -85,40 +108,58 @@
                         android:layout_height="wrap_content"
                         android:text="user@example.com"
                         android:textSize="14sp"
-                        android:textColor="#666666" />
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Кнопка редактирования -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEditProfile"
+                        style="@style/Widget.Sakta.Button.Secondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Редактировать"
+                        android:textSize="14sp"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Настройки -->
-            <LinearLayout
+            <!-- Доверенные контакты -->
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp">
+                android:text="Доверенные контакты"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="8dp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Настройки"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:layout_marginBottom="8dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Эти люди будут уведомлены при активации SOS"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="12dp" />
 
-                <!-- Приватность -->
+            <!-- Список доверенных контактов -->
+            <LinearLayout
+                android:id="@+id/trustedContactsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Контакт 1 -->
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardPrivacy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="@color/card_background"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"
-                    android:clickable="true"
-                    android:focusable="true">
+                    app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -127,42 +168,68 @@
                         android:padding="16dp"
                         android:gravity="center_vertical">
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_settings"
-                            android:alpha="0.7" />
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp">
 
-                        <TextView
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/bg_contact_avatar" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="М"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/white" />
+
+                        </FrameLayout>
+
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Приватность"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/black"
-                            android:layout_marginStart="16dp" />
+                            android:orientation="vertical"
+                            android:layout_marginStart="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Мама"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/white" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="+996 555 123 456"
+                                android:textSize="13sp"
+                                android:textColor="@color/text_secondary" />
+
+                        </LinearLayout>
 
                         <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:src="@android:drawable/ic_menu_more"
-                            android:rotation="270"
-                            android:alpha="0.5" />
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="@color/status_safe" />
 
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Уведомления -->
+                <!-- Контакт 2 -->
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardNotifications"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="@color/card_background"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"
-                    android:clickable="true"
-                    android:focusable="true">
+                    app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -171,40 +238,68 @@
                         android:padding="16dp"
                         android:gravity="center_vertical">
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_notification"
-                            android:alpha="0.7" />
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp">
 
-                        <TextView
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/bg_contact_avatar_blue" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="П"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/white" />
+
+                        </FrameLayout>
+
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Уведомления"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/black"
-                            android:layout_marginStart="16dp" />
+                            android:orientation="vertical"
+                            android:layout_marginStart="12dp">
 
-                        <androidx.appcompat.widget.SwitchCompat
-                            android:id="@+id/switchNotifications"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Папа"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/white" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="+996 555 789 012"
+                                android:textSize="13sp"
+                                android:textColor="@color/text_secondary" />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="@color/status_safe" />
 
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- О приложении -->
+                <!-- Контакт 3 -->
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardAbout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
+                    app:cardBackgroundColor="@color/card_background"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"
-                    android:clickable="true"
-                    android:focusable="true">
+                    app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -213,27 +308,55 @@
                         android:padding="16dp"
                         android:gravity="center_vertical">
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_info"
-                            android:alpha="0.7" />
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp">
 
-                        <TextView
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/bg_contact_avatar_green" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="А"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/white" />
+
+                        </FrameLayout>
+
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="О приложении"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/black"
-                            android:layout_marginStart="16dp" />
+                            android:orientation="vertical"
+                            android:layout_marginStart="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Алия (подруга)"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/white" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="+996 700 111 222"
+                                android:textSize="13sp"
+                                android:textColor="@color/text_secondary" />
+
+                        </LinearLayout>
 
                         <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:src="@android:drawable/ic_menu_more"
-                            android:rotation="270"
-                            android:alpha="0.5" />
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_check_circle"
+                            app:tint="@color/status_safe" />
 
                     </LinearLayout>
 
@@ -241,16 +364,179 @@
 
             </LinearLayout>
 
+            <!-- Добавить контакт -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddContact"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="+ Добавить контакт"
+                android:textColor="@color/primary"
+                android:textSize="15sp"
+                app:strokeColor="@color/primary"
+                app:strokeWidth="1dp"
+                app:cornerRadius="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Настройки -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Настройки"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Уведомления -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardNotifications"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_notification"
+                        app:tint="@color/text_secondary" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Уведомления"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:layout_marginStart="16dp" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switchNotifications"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Приватность -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPrivacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_shield"
+                        app:tint="@color/text_secondary" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Приватность"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:layout_marginStart="16dp" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/text_secondary" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- О приложении -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_info"
+                        app:tint="@color/text_secondary" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="О приложении"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:layout_marginStart="16dp" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/text_secondary" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Выход -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogout"
+                style="@style/Widget.Sakta.Button.Danger"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="Выйти из аккаунта"
+                android:textSize="16sp" />
+
+            <!-- Версия -->
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Выйти"
-                android:textColor="@android:color/white"
-                app:backgroundTint="#FF3B30"
-                android:layout_margin="16dp"
-                app:cornerRadius="12dp" />
+                android:text="Sakta v1.0.0"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:gravity="center"
+                android:layout_marginTop="16dp" />
 
         </LinearLayout>
 

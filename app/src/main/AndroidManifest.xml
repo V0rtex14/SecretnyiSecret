@@ -13,11 +13,24 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
-    <!-- Для фоновой геолокации (опционально) -->
+    <!-- Для фоновой геолокации -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <!-- Для уведомлений -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Для вибрации (SOS) -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Для звонков -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <!-- Для SMS -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <!-- Для Foreground Service (фоновое отслеживание) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -59,9 +72,30 @@
             android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize" />
 
-        <!-- Friends Activity -->
+        <!-- SOS Activity -->
         <activity
-            android:name="com.example.saktahahathonv1.friends.FriendsActivity"
+            android:name="com.example.saktahahathonv1.sos.SosActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sakta.Emergency" />
+
+        <!-- Safe Route Activity -->
+        <activity
+            android:name="com.example.saktahahathonv1.saferoute.SafeRouteActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SaktaHAHATHONV1" />
+
+        <!-- Escort Mode Activity -->
+        <activity
+            android:name="com.example.saktahahathonv1.escort.EscortModeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SaktaHAHATHONV1" />
+
+        <!-- Tracking Activity -->
+        <activity
+            android:name="com.example.saktahahathonv1.tracking.TrackingActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SaktaHAHATHONV1" />
@@ -80,19 +114,33 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SaktaHAHATHONV1" />
 
-        <!-- Escort Activity -->
+        <!-- Friends Activity (Legacy) -->
+        <activity
+            android:name="com.example.saktahahathonv1.friends.FriendsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SaktaHAHATHONV1" />
+
+        <!-- Escort Activity (Legacy) -->
         <activity
             android:name="com.example.saktahahathonv1.escort.EscortActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SaktaHAHATHONV1" />
 
-        <!-- Family Activity -->
+        <!-- Family Activity (Legacy) -->
         <activity
             android:name="com.example.saktahahathonv1.family.FamilyActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SaktaHAHATHONV1" />
+
+        <!-- Location Service для режима сопровождения -->
+        <service
+            android:name="com.example.saktahahathonv1.location.LocationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="location" />
 
         <!-- Конфигурация OSMDroid -->
         <meta-data

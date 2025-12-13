@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_dark">
+
+    <!-- Toolbar -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/back"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:drawableStart="@drawable/ic_arrow_back"
+            android:drawablePadding="4dp"
+            android:padding="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/escort_mode"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textAlignment="center" />
+
+        <View
+            android:layout_width="48dp"
+            android:layout_height="1dp" />
+
+    </LinearLayout>
+
+    <!-- Иконка щита -->
+    <LinearLayout
+        android:id="@+id/shieldContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="48dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/imgShield"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_shield"
+            android:background="@drawable/bg_shield_icon"
+            android:padding="24dp"
+            app:tint="@color/white"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/txtEscortTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/escort_active"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtEscortSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/escort_mode_active"
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <!-- Карточка статуса -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="32dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/card_safe_bg"
+        app:strokeColor="@color/card_safe_border"
+        app:strokeWidth="1dp"
+        app:layout_constraintTop_toBottomOf="@id/shieldContainer">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Всё в порядке -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="@color/success"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/all_ok"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- До цели -->
+            <TextView
+                android:id="@+id/txtDistanceToGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="До цели: 1.2 км"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+
+            <!-- Текущая зона -->
+            <TextView
+                android:id="@+id/txtCurrentZone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Текущая зона: Безопасно"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+
+            <!-- Разделитель -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/divider" />
+
+            <!-- Уведомления отправлены -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/notifications_sent"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+
+            <!-- Контакт 1 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="• Мама"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp" />
+
+            <!-- Контакт 2 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="• Алия"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Кнопки действий -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Завершить сопровождение -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFinishEscort"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/finish_escort"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            style="@style/Widget.Sakta.Button.Outlined"
+            app:strokeColor="@color/border"
+            app:cornerRadius="16dp" />
+
+        <!-- SOS -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSos"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/sos"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            app:icon="@drawable/ic_warning"
+            app:iconGravity="textStart"
+            app:iconSize="24dp"
+            app:iconTint="@color/white"
+            app:iconPadding="8dp"
+            app:backgroundTint="@color/sos_red"
+            app:cornerRadius="16dp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

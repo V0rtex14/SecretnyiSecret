@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer warning ring -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#30FF3B30"/>
+            <size android:width="48dp" android:height="48dp"/>
+        </shape>
+    </item>
+    <!-- Inner circle -->
+    <item android:left="8dp" android:top="8dp" android:right="8dp" android:bottom="8dp">
+        <shape android:shape="oval">
+            <solid android:color="#60FF3B30"/>
+            <stroke android:width="2dp" android:color="#FF3B30"/>
+            <size android:width="32dp" android:height="32dp"/>
+        </shape>
+    </item>
+    <!-- Exclamation mark background -->
+    <item android:left="16dp" android:top="16dp" android:right="16dp" android:bottom="16dp">
+        <shape android:shape="oval">
+            <solid android:color="#FF3B30"/>
+            <size android:width="16dp" android:height="16dp"/>
+        </shape>
+    </item>
+</layer-list>
