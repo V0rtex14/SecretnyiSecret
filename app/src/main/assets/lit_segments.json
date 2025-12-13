@@ -1,1 +1,17 @@
-[{"startLat":42.8740,"startLon":74.5690,"endLat":42.8760,"endLon":74.5710,"name":"пр. Чуй","brightness":85},{"startLat":42.8750,"startLon":74.5680,"endLat":42.8755,"endLon":74.5720,"name":"ул. Ибраимова","brightness":75},{"startLat":42.8730,"startLon":74.5695,"endLat":42.8770,"endLon":74.5705,"name":"ул. Киевская","brightness":80}]
+[
+  {"id":301,"startLat":42.8810,"startLon":74.5605,"endLat":42.8786,"endLon":74.5753,"streetName":"пр. Жибек-Жолу","lightingQuality":"bright"},
+  {"id":302,"startLat":42.8742,"startLon":74.5901,"endLat":42.8769,"endLon":74.6068,"streetName":"ул. Киевская","lightingQuality":"consistent"},
+  {"id":303,"startLat":42.8705,"startLon":74.5562,"endLat":42.8648,"endLon":74.5724,"streetName":"пр. Чуй","lightingQuality":"bright"},
+  {"id":304,"startLat":42.8898,"startLon":74.5823,"endLat":42.8943,"endLon":74.5971,"streetName":"ул. Фрунзе","lightingQuality":"bright"},
+  {"id":305,"startLat":42.8614,"startLon":74.6050,"endLat":42.8549,"endLon":74.6187,"streetName":"ул. Байтик Баатыра","lightingQuality":"partial"},
+  {"id":306,"startLat":42.8481,"startLon":74.5933,"endLat":42.8565,"endLon":74.6066,"streetName":"ул. Садырбаева","lightingQuality":"consistent"},
+  {"id":307,"startLat":42.8847,"startLon":74.6176,"endLat":42.8792,"endLon":74.6310,"streetName":"ул. Тыныстанова","lightingQuality":"bright"},
+  {"id":308,"startLat":42.8663,"startLon":74.5852,"endLat":42.8731,"endLon":74.5990,"streetName":"ул. Исанова","lightingQuality":"consistent"},
+  {"id":309,"startLat":42.8925,"startLon":74.5650,"endLat":42.8849,"endLon":74.5515,"streetName":"ул. Ахунбаева","lightingQuality":"partial"},
+  {"id":310,"startLat":42.8775,"startLon":74.5412,"endLat":42.8697,"endLon":74.5524,"streetName":"ул. Айни","lightingQuality":"bright"},
+  {"id":311,"startLat":42.8577,"startLon":74.5636,"endLat":42.8482,"endLon":74.5772,"streetName":"ул. Жукеева-Пудовкина","lightingQuality":"partial"},
+  {"id":312,"startLat":42.8889,"startLon":74.6079,"endLat":42.8815,"endLon":74.6223,"streetName":"ул. Жибек-Жолу восток","lightingQuality":"bright"},
+  {"id":313,"startLat":42.8691,"startLon":74.6155,"endLat":42.8629,"endLon":74.6289,"streetName":"ул. Токтоналиева","lightingQuality":"consistent"},
+  {"id":314,"startLat":42.8519,"startLon":74.6042,"endLat":42.8447,"endLon":74.6178,"streetName":"ул. Абая","lightingQuality":"partial"},
+  {"id":315,"startLat":42.8951,"startLon":74.5790,"endLat":42.8878,"endLon":74.5927,"streetName":"ул. Баканбай Батыра","lightingQuality":"bright"}
+]

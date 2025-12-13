@@ -17,6 +17,8 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polyline
 
 class TrackingActivity : AppCompatActivity() {
 
@@ -31,13 +33,11 @@ class TrackingActivity : AppCompatActivity() {
     private lateinit var btnMessage: MaterialButton
 
     private val handler = Handler(Looper.getMainLooper())
-
-    // Демо данные детей
-    private val children = listOf(
-        Child("Алина", "дочь", "+996 555 777 888", GeoPoint(42.8750, 74.5720)),
-        Child("Темирлан", "сын", "+996 555 999 000", GeoPoint(42.8700, 74.5650))
-    )
+    private val trackingProvider by lazy { MockTrackingProvider(this) }
+    private var trackedChildren: List<TrackedChild> = emptyList()
     private var currentChildIndex = 0
+    private var currentRouteOverlay: Polyline? = null
+    private val routeMarkers = mutableListOf<Marker>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +51,7 @@ class TrackingActivity : AppCompatActivity() {
 
         initViews()
         setupMap()
+        loadLocalData()
         setupUI()
         startLocationUpdates()
     }
@@ -71,9 +72,8 @@ class TrackingActivity : AppCompatActivity() {
         mapView.setTileSource(TileSourceFactory.MAPNIK)
         mapView.setMultiTouchControls(true)
 
-        val child = children[currentChildIndex]
-        mapView.controller.setZoom(15.0)
-        mapView.controller.setCenter(child.location)
+        mapView.controller.setZoom(13.5)
+        mapView.controller.setCenter(GeoPoint(42.8746, 74.5698))
     }
 
     private fun setupUI() {
@@ -92,37 +92,56 @@ class TrackingActivity : AppCompatActivity() {
         btnMessage.setOnClickListener {
             messageChild()
         }
+    }
 
-        updateChildInfo()
+    private fun loadLocalData() {
+        trackedChildren = trackingProvider.loadTrackedChildren()
+
+        if (trackedChildren.isNotEmpty()) {
+            currentChildIndex = 0
+            updateChildInfo()
+        } else {
+            txtSelectedChild.text = getString(R.string.app_name)
+            txtChildRoute.text = getString(R.string.not_available)
+        }
     }
 
     private fun showChildSelector() {
-        val names = children.map { "${it.name} (${it.relationship})" }.toTypedArray()
+        if (trackedChildren.isEmpty()) return
+
+        val names = trackedChildren.map { "${it.name} (${it.relationship})" }.toTypedArray()
 
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Выберите ребенка")
             .setItems(names) { _, which ->
                 currentChildIndex = which
                 updateChildInfo()
-                mapView.controller.setCenter(children[which].location)
             }
             .show()
     }
 
     private fun updateChildInfo() {
-        val child = children[currentChildIndex]
+        if (trackedChildren.isEmpty()) return
+
+        val child = trackedChildren[currentChildIndex]
         txtSelectedChild.text = "${child.name} (${child.relationship})"
+        val minutesAgo = ((System.currentTimeMillis() - child.lastUpdated) / 60000).coerceAtLeast(0)
+        txtLastUpdate.text = "Обновлено: $minutesAgo мин назад"
+        txtChildRoute.text = "Маршрут: ${child.route.size} точек"
+        showRouteForChild(child)
     }
 
     private fun callChild() {
-        val child = children[currentChildIndex]
+        if (trackedChildren.isEmpty()) return
+        val child = trackedChildren[currentChildIndex]
         val intent = Intent(Intent.ACTION_DIAL)
         intent.data = Uri.parse("tel:${child.phone}")
         startActivity(intent)
     }
 
     private fun messageChild() {
-        val child = children[currentChildIndex]
+        if (trackedChildren.isEmpty()) return
+        val child = trackedChildren[currentChildIndex]
         val intent = Intent(Intent.ACTION_SENDTO)
         intent.data = Uri.parse("smsto:${child.phone}")
         intent.putExtra("sms_body", "Привет! Где ты сейчас?")
@@ -132,9 +151,11 @@ class TrackingActivity : AppCompatActivity() {
     private fun startLocationUpdates() {
         val updateRunnable = object : Runnable {
             override fun run() {
-                // Симуляция обновления местоположения
-                val minutes = (1..5).random()
-                txtLastUpdate.text = "Обновлено: $minutes мин назад"
+                if (trackedChildren.isNotEmpty()) {
+                    val child = trackedChildren[currentChildIndex]
+                    val minutesAgo = ((System.currentTimeMillis() - child.lastUpdated) / 60000).coerceAtLeast(0)
+                    txtLastUpdate.text = "Обновлено: $minutesAgo мин назад"
+                }
 
                 handler.postDelayed(this, 30000) // Обновление каждые 30 секунд
             }
@@ -158,10 +179,56 @@ class TrackingActivity : AppCompatActivity() {
         handler.removeCallbacksAndMessages(null)
     }
 
-    data class Child(
-        val name: String,
-        val relationship: String,
-        val phone: String,
-        val location: GeoPoint
-    )
+    private fun showRouteForChild(child: TrackedChild) {
+        clearRoute()
+
+        val routePoints = child.route.map { it.toGeoPoint() }
+        if (routePoints.isEmpty()) return
+
+        val polyline = Polyline().apply {
+            outlinePaint.color = resources.getColor(R.color.primary, theme)
+            outlinePaint.strokeWidth = 6f
+            setPoints(routePoints)
+        }
+
+        val startMarker = Marker(mapView).apply {
+            position = routePoints.first()
+            title = "Старт ${child.name}"
+            snippet = "Начало маршрута"
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        }
+
+        val endMarker = Marker(mapView).apply {
+            position = routePoints.last()
+            title = "Финиш ${child.name}"
+            snippet = "Текущая точка"
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        }
+
+        val currentMarker = Marker(mapView).apply {
+            position = child.currentLocation
+            title = child.name
+            snippet = "Последнее обновление маршрута"
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        }
+
+        mapView.overlays.add(polyline)
+        mapView.overlays.add(startMarker)
+        mapView.overlays.add(endMarker)
+        mapView.overlays.add(currentMarker)
+
+        currentRouteOverlay = polyline
+        routeMarkers.addAll(listOf(startMarker, endMarker, currentMarker))
+
+        mapView.controller.setZoom(15.5)
+        mapView.controller.animateTo(child.currentLocation)
+        mapView.invalidate()
+    }
+
+    private fun clearRoute() {
+        currentRouteOverlay?.let { mapView.overlays.remove(it) }
+        routeMarkers.forEach { mapView.overlays.remove(it) }
+        routeMarkers.clear()
+        currentRouteOverlay = null
+    }
 }
