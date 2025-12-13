@@ -1,31 +1,22 @@
 [
-  {
-    "id": "c1",
-    "lat": 42.8742,
-    "lon": 74.5702,
-    "type": "dark_area",
-    "description": ";>E>5 >A25I5=85 2>7;5 ?0@:0",
-    "timestamp": "2025-12-08T20:15:00",
-    "userId": "user123",
-    "verified": false
-  },
-  {
-    "id": "c2",
-    "lat": 42.8768,
-    "lon": 74.5692,
-    "description": ">4>7@8B5;L=0O 3@C??0 ;N459",
-    "timestamp": "2025-12-07T21:30:00",
-    "userId": "user456",
-    "verified": true
-  },
-  {
-    "id": "c3",
-    "lat": 42.8751,
-    "lon": 74.5688,
-    "type": "suspicious_activity",
-    "description": "!B@0==>5 ?>2545=85 2>7;5 10=:><0B0",
-    "timestamp": "2025-12-06T19:45:00",
-    "userId": "user789",
-    "verified": false
-  }
+  {"id":101,"lat":42.8764,"lon":74.5719,"type":"harassment","description":"Темная аллея, мужчина следовал за мной","timestamp":"2025-12-08T22:10:00","datetime":"2025-12-08T22:10:00","riskLevel":"MEDIUM","userId":"citizen_01","verified":false,"weight":3,"isFemale":true,"text":"Темная аллея, мужчина следовал за мной"},
+  {"id":102,"lat":42.8722,"lon":74.5631,"type":"suspicious_activity","description":"Компания подростков бросает петарды","timestamp":"2025-12-08T21:40:00","datetime":"2025-12-08T21:40:00","riskLevel":"LOW","userId":"citizen_02","verified":false,"weight":2,"isFemale":false,"text":"Компания подростков бросает петарды"},
+  {"id":103,"lat":42.8685,"lon":74.5796,"type":"robbery","description":"Попытка вырвать сумку у мамы","timestamp":"2025-12-08T20:15:00","datetime":"2025-12-08T20:15:00","riskLevel":"HIGH","userId":"citizen_03","verified":true,"weight":5,"isFemale":true,"text":"Попытка вырвать сумку у мамы"},
+  {"id":104,"lat":42.8841,"lon":74.5488,"type":"assault","description":"Кто-то дерётся возле подъезда","timestamp":"2025-12-08T19:45:00","datetime":"2025-12-08T19:45:00","riskLevel":"HIGH","userId":"citizen_04","verified":true,"weight":4,"isFemale":false,"text":"Драка возле подъезда"},
+  {"id":105,"lat":42.8935,"lon":74.5659,"type":"harassment","description":"Навязчивый попрошайка у магазина","timestamp":"2025-12-08T18:55:00","datetime":"2025-12-08T18:55:00","riskLevel":"MEDIUM","userId":"citizen_05","verified":false,"weight":2,"isFemale":true,"text":"Навязчивый попрошайка у магазина"},
+  {"id":106,"lat":42.8598,"lon":74.6254,"type":"night_incident","description":"Очень темно, фонари не работают","timestamp":"2025-12-08T01:25:00","datetime":"2025-12-08T01:25:00","riskLevel":"MEDIUM","userId":"citizen_06","verified":false,"weight":3,"isFemale":false,"text":"Фонари не работают"},
+  {"id":107,"lat":42.8475,"lon":74.5941,"type":"suspicious_activity","description":"Машина без номеров кружит по дворам","timestamp":"2025-12-07T23:50:00","datetime":"2025-12-07T23:50:00","riskLevel":"LOW","userId":"citizen_07","verified":false,"weight":2,"isFemale":true,"text":"Машина без номеров кружит"},
+  {"id":108,"lat":42.8789,"lon":74.6217,"type":"robbery","description":"Группа парней забрала телефон","timestamp":"2025-12-07T22:05:00","datetime":"2025-12-07T22:05:00","riskLevel":"HIGH","userId":"citizen_08","verified":true,"weight":5,"isFemale":false,"text":"Грабеж телефона"},
+  {"id":109,"lat":42.8839,"lon":74.6053,"type":"harassment","description":"Подозрительный мужчина у подъезда","timestamp":"2025-12-07T21:15:00","datetime":"2025-12-07T21:15:00","riskLevel":"MEDIUM","userId":"citizen_09","verified":false,"weight":3,"isFemale":true,"text":"Подозрительный мужчина у подъезда"},
+  {"id":110,"lat":42.8646,"lon":74.5694,"type":"suspicious_activity","description":"Громкие крики в парке","timestamp":"2025-12-07T20:40:00","datetime":"2025-12-07T20:40:00","riskLevel":"LOW","userId":"citizen_10","verified":false,"weight":2,"isFemale":false,"text":"Громкие крики в парке"},
+  {"id":111,"lat":42.8904,"lon":74.5801,"type":"robbery","description":"Забрали сумку у девушки на остановке","timestamp":"2025-12-07T19:55:00","datetime":"2025-12-07T19:55:00","riskLevel":"HIGH","userId":"citizen_11","verified":true,"weight":5,"isFemale":true,"text":"Забрали сумку у девушки"},
+  {"id":112,"lat":42.8555,"lon":74.5599,"type":"night_incident","description":"Нет освещения, страшно ходить","timestamp":"2025-12-07T00:45:00","datetime":"2025-12-07T00:45:00","riskLevel":"MEDIUM","userId":"citizen_12","verified":false,"weight":3,"isFemale":false,"text":"Нет освещения"},
+  {"id":113,"lat":42.8749,"lon":74.5887,"type":"harassment","description":"Неизвестный следил до подъезда","timestamp":"2025-12-06T22:30:00","datetime":"2025-12-06T22:30:00","riskLevel":"MEDIUM","userId":"citizen_13","verified":false,"weight":3,"isFemale":true,"text":"Следили до подъезда"},
+  {"id":114,"lat":42.8817,"lon":74.5728,"type":"suspicious_activity","description":"Переругиваются возле киоска","timestamp":"2025-12-06T21:05:00","datetime":"2025-12-06T21:05:00","riskLevel":"LOW","userId":"citizen_14","verified":false,"weight":2,"isFemale":false,"text":"Переругиваются возле киоска"},
+  {"id":115,"lat":42.8628,"lon":74.6037,"type":"robbery","description":"Попытка вскрыть автомобиль","timestamp":"2025-12-06T20:15:00","datetime":"2025-12-06T20:15:00","riskLevel":"HIGH","userId":"citizen_15","verified":true,"weight":5,"isFemale":false,"text":"Попытка вскрыть автомобиль"},
+  {"id":116,"lat":42.8707,"lon":74.5481,"type":"assault","description":"Соседи дерутся на парковке","timestamp":"2025-12-06T19:35:00","datetime":"2025-12-06T19:35:00","riskLevel":"HIGH","userId":"citizen_16","verified":true,"weight":4,"isFemale":true,"text":"Соседи дерутся на парковке"},
+  {"id":117,"lat":42.8531,"lon":74.6119,"type":"harassment","description":"Неприличные комментарии возле аптеки","timestamp":"2025-12-06T18:20:00","datetime":"2025-12-06T18:20:00","riskLevel":"MEDIUM","userId":"citizen_17","verified":false,"weight":3,"isFemale":false,"text":"Неприличные комментарии возле аптеки"},
+  {"id":118,"lat":42.8892,"lon":74.5933,"type":"suspicious_activity","description":"Звук разбитого стекла поздно вечером","timestamp":"2025-12-06T02:15:00","datetime":"2025-12-06T02:15:00","riskLevel":"LOW","userId":"citizen_18","verified":false,"weight":2,"isFemale":true,"text":"Звук разбитого стекла"},
+  {"id":119,"lat":42.8669,"lon":74.5784,"type":"night_incident","description":"Мотоциклы гоняют во дворах","timestamp":"2025-12-05T23:55:00","datetime":"2025-12-05T23:55:00","riskLevel":"MEDIUM","userId":"citizen_19","verified":false,"weight":3,"isFemale":false,"text":"Мотоциклы гоняют во дворах"},
+  {"id":120,"lat":42.8776,"lon":74.6095,"type":"robbery","description":"Кто-то пытался сорвать сумку","timestamp":"2025-12-05T22:45:00","datetime":"2025-12-05T22:45:00","riskLevel":"HIGH","userId":"citizen_20","verified":true,"weight":5,"isFemale":true,"text":"Попытка сорвать сумку"}
 ]

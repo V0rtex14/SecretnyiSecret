@@ -46,45 +46,47 @@
                     android:contentDescription="@null"
                     app:tint="@color/success" />
 
-        <!-- AI Assistant -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardAIAssistant"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="4dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_marginEnd="8dp">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@android:drawable/ic_btn_speak_now"
-                android:padding="12dp"
-                android:contentDescription="AI Assistant"
-                app:tint="#6B4EFF" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Фильтры -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardFilter"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="4dp"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_filter"
-                android:padding="12dp"
-                android:contentDescription="Фильтры" />
-
             </LinearLayout>
+
+            <!-- AI Assistant -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAIAssistant"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginEnd="8dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@android:drawable/ic_btn_speak_now"
+                    android:padding="12dp"
+                    android:contentDescription="AI Assistant"
+                    app:tint="#6B4EFF" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Фильтры -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardFilter"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="4dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_filter"
+                    android:padding="12dp"
+                    android:contentDescription="Фильтры" />
+
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Профиль -->
             <com.google.android.material.card.MaterialCardView
