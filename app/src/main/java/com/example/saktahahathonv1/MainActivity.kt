@@ -311,15 +311,14 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                val centerLat = 42.8746
-                val centerLon = 74.5698
-
                 val dataManager = DataManager(this@MainActivity)
+                val mockDataSource = LocalMockDataSource(this@MainActivity)
+
                 incidents.addAll(dataManager.loadIncidents())
                 complaints.addAll(dataManager.loadComplaints())
                 safePlaces.addAll(dataManager.loadSafePlaces())
                 litSegments.addAll(dataManager.loadLitSegments())
-                crowdedAreas.addAll(DemoDataGenerator.generateCrowdedAreas(centerLat, centerLon))
+                crowdedAreas.addAll(mockDataSource.getCrowdedAreas())
 
                 riskEngine = RiskEngine(incidents, complaints, safePlaces, litSegments)
                 roadManager = OSRMRoadManager(this@MainActivity, packageName)

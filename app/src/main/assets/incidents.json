@@ -1,102 +1,26 @@
 [
-  {
-    "id": 1,
-    "lat": 42.8756,
-    "lon": 74.5698,
-    "type": "robbery",
-    "severity": 3,
-    "datetime": "2025-12-01T22:30:00",
-    "source": "МВД",
-    "description": "Грабёж возле парка Панфилова"
-  },
-  {
-    "id": 2,
-    "lat": 42.8730,
-    "lon": 74.5720,
-    "type": "harassment",
-    "severity": 2,
-    "datetime": "2025-12-05T19:00:00",
-    "source": "Жалоба граждан",
-    "description": "Преследование на ул. Киевской"
-  },
-  {
-    "id": 3,
-    "lat": 42.8770,
-    "lon": 74.5680,
-    "type": "assault",
-    "severity": 4,
-    "datetime": "2025-11-20T23:45:00",
-    "source": "МВД",
-    "description": "Нападение в переулке"
-  },
-  {
-    "id": 4,
-    "lat": 42.8745,
-    "lon": 74.5710,
-    "type": "robbery",
-    "severity": 3,
-    "datetime": "2025-11-28T21:15:00",
-    "source": "Партнёр",
-    "description": "Кража телефона"
-  },
-  {
-    "id": 5,
-    "lat": 42.8765,
-    "lon": 74.5705,
-    "type": "harassment",
-    "severity": 2,
-    "datetime": "2025-12-07T18:30:00",
-    "source": "СМИ",
-    "description": "Домогательство возле остановки"
-  },
-  {
-    "id": 6,
-    "lat": 42.8740,
-    "lon": 74.5695,
-    "type": "assault",
-    "severity": 3,
-    "datetime": "2025-11-15T23:00:00",
-    "source": "МВД",
-    "description": "Драка у ночного клуба"
-  },
-  {
-    "id": 7,
-    "lat": 42.8755,
-    "lon": 74.5685,
-    "type": "robbery",
-    "severity": 4,
-    "datetime": "2025-11-10T02:00:00",
-    "source": "МВД",
-    "description": "Вооружённый грабёж"
-  },
-  {
-    "id": 8,
-    "lat": 42.8735,
-    "lon": 74.5700,
-    "type": "other",
-    "severity": 1,
-    "datetime": "2025-12-06T20:00:00",
-    "source": "Партнёр",
-    "description": "Подозрительная активность"
-  },
-  {
-    "id": 9,
-    "lat": 42.8760,
-    "lon": 74.5715,
-    "type": "harassment",
-    "severity": 2,
-    "datetime": "2025-12-03T19:45:00",
-    "source": "Жалоба граждан",
-    "description": "Приставание на улице"
-  },
-  {
-    "id": 10,
-    "lat": 42.8750,
-    "lon": 74.5690,
-    "type": "assault",
-    "severity": 3,
-    "datetime": "2025-11-25T22:30:00",
-    "source": "МВД",
-    "description": "Нападение с целью ограбления"
-  }
+  {"id":1,"lat":42.8812,"lon":74.6024,"type":"assault","severity":4,"datetime":"2025-12-08T23:10:00","source":"Очевидец","description":"Нападение около ТЦ Asia Mall","riskLevel":"HIGH"},
+  {"id":2,"lat":42.8748,"lon":74.5661,"type":"harassment","severity":3,"datetime":"2025-12-08T20:50:00","source":"Полиция","description":"Домогательства у остановки на проспекте Чуй","riskLevel":"MEDIUM"},
+  {"id":3,"lat":42.8689,"lon":74.5817,"type":"robbery","severity":5,"datetime":"2025-12-08T19:25:00","source":"Жалоба","description":"Открытый грабеж возле Ошского рынка","riskLevel":"HIGH"},
+  {"id":4,"lat":42.8931,"lon":74.5602,"type":"suspicious_activity","severity":2,"datetime":"2025-12-08T18:40:00","source":"Дворовая камера","description":"Подозрительный автомобиль без номеров","riskLevel":"LOW"},
+  {"id":5,"lat":42.8605,"lon":74.6271,"type":"night_incident","severity":3,"datetime":"2025-12-08T02:15:00","source":"Жильцы","description":"Громкие крики у сквера Асанбай","riskLevel":"MEDIUM"},
+  {"id":6,"lat":42.8504,"lon":74.5903,"type":"assault","severity":4,"datetime":"2025-12-07T23:55:00","source":"Полиция","description":"Избиение у двора школы №54","riskLevel":"HIGH"},
+  {"id":7,"lat":42.8882,"lon":74.5759,"type":"harassment","severity":2,"datetime":"2025-12-07T21:35:00","source":"Таксист","description":"Навязчивое преследование пассажирки","riskLevel":"MEDIUM"},
+  {"id":8,"lat":42.8835,"lon":74.5492,"type":"robbery","severity":5,"datetime":"2025-12-07T20:10:00","source":"Потерпевший","description":"Срыв сумки около парка Ататюрка","riskLevel":"HIGH"},
+  {"id":9,"lat":42.8714,"lon":74.5427,"type":"suspicious_activity","severity":1,"datetime":"2025-12-07T18:20:00","source":"Соседи","description":"Группа подростков заглядывает в дворы","riskLevel":"LOW"},
+  {"id":10,"lat":42.8796,"lon":74.6204,"type":"night_incident","severity":3,"datetime":"2025-12-07T01:40:00","source":"Диспетчер 112","description":"Драка возле ночного клуба","riskLevel":"HIGH"},
+  {"id":11,"lat":42.8439,"lon":74.5921,"type":"harassment","severity":2,"datetime":"2025-12-06T22:05:00","source":"Соцсети","description":"Навязчивые разговоры у маршрута 211","riskLevel":"MEDIUM"},
+  {"id":12,"lat":42.8965,"lon":74.5895,"type":"assault","severity":4,"datetime":"2025-12-06T21:10:00","source":"Полиция","description":"Драка в подъезде по ул. Московской","riskLevel":"HIGH"},
+  {"id":13,"lat":42.8577,"lon":74.5551,"type":"robbery","severity":4,"datetime":"2025-12-06T19:35:00","source":"Жалоба","description":"Грабеж телефона у ТЭЦ","riskLevel":"HIGH"},
+  {"id":14,"lat":42.8658,"lon":74.6048,"type":"suspicious_activity","severity":1,"datetime":"2025-12-06T17:25:00","source":"Дворники","description":"Посторонний осматривает припаркованные авто","riskLevel":"LOW"},
+  {"id":15,"lat":42.8831,"lon":74.6336,"type":"night_incident","severity":2,"datetime":"2025-12-06T03:50:00","source":"Такси","description":"Пьяная компания на дороге","riskLevel":"MEDIUM"},
+  {"id":16,"lat":42.8725,"lon":74.5975,"type":"assault","severity":3,"datetime":"2025-12-05T22:05:00","source":"Полиция","description":"Конфликт с применением ножа","riskLevel":"HIGH"},
+  {"id":17,"lat":42.8844,"lon":74.5707,"type":"harassment","severity":2,"datetime":"2025-12-05T20:40:00","source":"Жалоба","description":"Преследование возле аллеи Молодой гвардии","riskLevel":"MEDIUM"},
+  {"id":18,"lat":42.8783,"lon":74.5569,"type":"suspicious_activity","severity":1,"datetime":"2025-12-05T18:15:00","source":"Видеонаблюдение","description":"Подозрительный обмен пакетами","riskLevel":"LOW"},
+  {"id":19,"lat":42.8486,"lon":74.6114,"type":"robbery","severity":5,"datetime":"2025-12-05T00:25:00","source":"Очевидец","description":"Ограбление курьера","riskLevel":"HIGH"},
+  {"id":20,"lat":42.8952,"lon":74.6122,"type":"night_incident","severity":2,"datetime":"2025-12-04T01:05:00","source":"Полиция","description":"Скопление шумной компании","riskLevel":"MEDIUM"},
+  {"id":21,"lat":42.8672,"lon":74.5739,"type":"assault","severity":3,"datetime":"2025-12-04T22:45:00","source":"Медслужба","description":"Побоища возле стадиона Спартак","riskLevel":"HIGH"},
+  {"id":22,"lat":42.8896,"lon":74.5841,"type":"harassment","severity":2,"datetime":"2025-12-04T20:15:00","source":"Жалоба","description":"Настойчивые просьбы денег у перехода","riskLevel":"MEDIUM"},
+  {"id":23,"lat":42.8538,"lon":74.5755,"type":"suspicious_activity","severity":1,"datetime":"2025-12-04T18:50:00","source":"Охрана ЖК","description":"Неизвестные фотографируют подъезды","riskLevel":"LOW"},
+  {"id":24,"lat":42.8761,"lon":74.6083,"type":"robbery","severity":4,"datetime":"2025-12-04T17:40:00","source":"Полиция","description":"Попытка вырыва сумки на ул. Исанова","riskLevel":"HIGH"}
 ]

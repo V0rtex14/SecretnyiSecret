@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.example.saktahahathonv1.data.*
+import com.example.saktahahathonv1.data.LocalMockDataSource
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
@@ -39,7 +39,11 @@ class MapViewModel : ViewModel() {
     private var riskEngine: RiskEngine? = null
     private var routingEngine: SafeRoutingEngine? = null
 
+    // Data source
+    private var localMockDataSource: LocalMockDataSource? = null
+
     fun initialize(mapView: MapView) {
+        localMockDataSource = LocalMockDataSource(mapView.context.applicationContext)
         loadAllData()
     }
 
@@ -48,15 +52,13 @@ class MapViewModel : ViewModel() {
             try {
                 _mapState.value = MapState.Loading
 
-                // Генерация демо-данных
-                val centerLat = 42.8746
-                val centerLon = 74.5698
+                val dataSource = localMockDataSource ?: return@launch
 
-                val incidentsList = DemoDataGenerator.generateDemoIncidents(centerLat, centerLon, 20)
-                val complaintsList = DemoDataGenerator.generateDemoComplaints(centerLat, centerLon, 12)
-                val safePlacesList = DemoDataGenerator.generateDemoSafePlaces(centerLat, centerLon)
-                val litSegmentsList = DemoDataGenerator.generateExtendedLitSegments(centerLat, centerLon)
-                val crowdedAreasList = DemoDataGenerator.generateCrowdedAreas(centerLat, centerLon)
+                val incidentsList = dataSource.getIncidents()
+                val complaintsList = dataSource.getComplaints()
+                val safePlacesList = dataSource.getSafePlaces()
+                val litSegmentsList = dataSource.getLitSegments()
+                val crowdedAreasList = dataSource.getCrowdedAreas()
 
                 _incidents.value = incidentsList
                 _complaints.value = complaintsList

@@ -22,6 +22,7 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polygon
 import android.widget.TextView
+import com.example.saktahahathonv1.tracking.MockTrackingProvider
 
 class FamilyActivity : AppCompatActivity() {
 
@@ -36,6 +37,7 @@ class FamilyActivity : AppCompatActivity() {
     private val children = mutableListOf<Child>()
     private val childMarkers = mutableMapOf<String, Marker>()
     private val safeZoneOverlays = mutableMapOf<String, Polygon>()
+    private val trackingProvider by lazy { MockTrackingProvider(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -198,29 +200,14 @@ class FamilyActivity : AppCompatActivity() {
     }
 
     private fun loadMockData() {
-        // Добавляем тестовые данные
-        val mockChild1 = Child(
-            id = "child_1",
-            name = "Айжан",
-            phone = "+996 555 123 456",
-            location = GeoPoint(42.8756, 74.5708),
-            safeZoneCenter = GeoPoint(42.8756, 74.5708),
-            safeZoneRadius = 200.0,
-            isInSafeZone = true
-        )
+        val trackedChildren = trackingProvider.loadTrackedChildren()
 
-        val mockChild2 = Child(
-            id = "child_2",
-            name = "Бекзат",
-            phone = "+996 555 789 012",
-            location = GeoPoint(42.8736, 74.5688),
-            safeZoneCenter = GeoPoint(42.8746, 74.5698),
-            safeZoneRadius = 150.0,
-            isInSafeZone = false
-        )
+        val mockChildren = trackedChildren.map { trackedChild ->
+            trackedChild.toFamilyChild()
+        }
 
-        children.add(mockChild1)
-        children.add(mockChild2)
+        children.clear()
+        children.addAll(mockChildren)
         adapter.updateChildren(children)
         updateEmptyState()
 
