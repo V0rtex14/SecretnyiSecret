@@ -364,7 +364,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <!-- SOS Кнопка -->
-        <com.google.android.material.button.MaterialButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/btnSos"
             android:layout_width="match_parent"
             android:layout_height="56dp"
